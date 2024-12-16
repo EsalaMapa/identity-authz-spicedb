@@ -2,14 +2,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.wso2.carbon.identity.application.authz.spiceDB</groupId>
-        <artifactId>identity-application-authz-spiceDB</artifactId>
+        <groupId>org.wso2.carbon.identity.authz.spicedb</groupId>
+        <artifactId>identity-authz-spicedb</artifactId>
         <version>1.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <packaging>bundle</packaging>
-    <artifactId>spicedb</artifactId>
-    <name>Archetype - org.wso2.carbon.identity.application.authz.spicedb</name>
+    <artifactId>org.wso2.carbon.identity.authz.spicedb</artifactId>
+    <name>Archetype - org.wso2.carbon.identity.authz.spicedb</name>
     <url>http://maven.apache.org</url>
 
     <build>
@@ -25,7 +25,7 @@
                         </Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.identity.application.authz.spicedb.internal
+                            org.wso2.carbon.identity.authz.spicedb.internal
                         </Private-Package>
                         <Import-Package>
                             org.apache.commons.logging;version="${org.apache.commons.logging.version.range}",
@@ -35,28 +35,31 @@
                             org.apache.http.*,
                             org.apache.http.client.*;version="[4.3.1.wso2v2,5.0.0)",
                             org.apache.http.impl.client.*;version="[4.3.1.wso2v2,5.0.0)",
-                            org.apache.http.message.*;version="[4.3.3, 5.0.0)"
+                            org.apache.http.message.*;version="[4.3.3, 5.0.0)",
+                            org.wso2.carbon.identity.inbound.auth.oauth2.*;version="7.0.137",
+                            org.wso2.carbon.identity.inbound.auth.oauth2.fga.*;version="7.0.137"
                         </Import-Package>
                         <Export-Package>
-                            !org.wso2.carbon.identity.application.authz.spicedb.internal,
-                            org.wso2.carbon.identity.application.authz.spicedb.*; version="${identity.app.authz.spiceDB.pkg.exp.version}",
+                            !org.wso2.carbon.identity.authz.spicedb.internal,
+                            org.wso2.carbon.identity.authz.spicedb.*; version="${identity.app.authz.spiceDB.pkg.exp.version}",
 <!--                            org.wso2.carbon.identity.application.authz.spicedb.handler.models;version="${identity.app.authz.spicedb.pkg.exp.version}",-->
 <!--                            org.wso2.carbon.identity.application.authz.spicedb.handler.spicedb;version="${identity.app.authz.spicedb.pkg.exp.version}",-->
-<!--                            org.wso2.carbon.identity.application.authz.spicedb.handler.core;version="${identity.app.authz.spicedb.pkg.exp.version}",-->
+<!--                            org.wso2.carbon.identity.application.authz.spicedb.handler.model;version="${identity.app.authz.spicedb.pkg.exp.version}",-->
 <!--                            org.wso2.carbon.identity.application.authz.spicedb.handler.util;version="${identity.app.authz.spicedb.pkg.exp.version}",-->
 <!--                            org.wso2.carbon.identity.application.authz.spicedb.constants;version="${identity.app.authz.spicedb.pkg.exp.version}",-->
                         </Export-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
             </plugin>
-                        <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
-            </plugin>
+<!--                        <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <source>11</source>-->
+<!--                    <target>11</target>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
         </plugins>
     </build>
     <dependencies>
@@ -99,6 +102,11 @@
         <dependency>
             <groupId>org.apache.httpcomponents.wso2</groupId>
             <artifactId>httpcore</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
+            <artifactId>org.wso2.carbon.identity.oauth</artifactId>
+            <version>7.0.137</version>
         </dependency>
     </dependencies>
 

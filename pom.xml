@@ -28,12 +28,12 @@
         <version>1.4</version>
     </parent>
 
-    <groupId>org.wso2.carbon.identity.application.authz.spiceDB</groupId>
-    <artifactId>identity-application-authz-spiceDB</artifactId>
+    <groupId>org.wso2.carbon.identity.authz.spicedb</groupId>
+    <artifactId>identity-authz-spicedb</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
     <modules>
-        <module>components/org.wso2.carbon.identity.application.authz.spicedb</module>
+        <module>components/org.wso2.carbon.identity.authz.spicedb</module>
     </modules>
 
     <properties>
