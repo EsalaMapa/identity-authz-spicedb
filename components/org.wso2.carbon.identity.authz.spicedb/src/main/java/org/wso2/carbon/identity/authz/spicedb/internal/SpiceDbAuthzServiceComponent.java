@@ -40,6 +40,7 @@ import org.wso2.carbon.identity.oauth2.fga.FGAuthorizationInterface;
         immediate = true
 )
 public class SpiceDbAuthzServiceComponent {
+
     private static final Log LOG = LogFactory.getLog(SpiceDbAuthzServiceComponent.class);
 
     /**
@@ -48,7 +49,8 @@ public class SpiceDbAuthzServiceComponent {
      * @param context Context of the component
      */
     @Activate
-    protected void activate(ComponentContext context) {
+    protected void activate (ComponentContext context) {
+
         try {
             SpiceDbAuthorizationHandler spiceDbAuthorizationHandler = new SpiceDbAuthorizationHandler();
             SpiceDbSchemaManagementHandler spiceDbSchemaManagementHandler = new SpiceDbSchemaManagementHandler();
@@ -73,7 +75,8 @@ public class SpiceDbAuthzServiceComponent {
      * @param context Context of the component
      */
     @Deactivate
-    protected void deactivate(ComponentContext context) {
+    protected void deactivate (ComponentContext context) {
+
         LOG.debug("Application SpiceDB authorizer handler bundle is deactivated.");
     }
 }

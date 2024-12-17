@@ -22,11 +22,12 @@ package org.wso2.carbon.identity.authz.spicedb.constants;
  * This class contains all the constant values used throughout this implementation.
  */
 public class SpiceDbConstants {
-    //general api requirements
+
+    //General api requirements.
     public static final String BASE_URL = "http://localhost:8443/";
     public static final String PRE_SHARED_KEY = "";
 
-    //api endpoints
+    //Api endpoints.
     public static final String PERMISSION_CHECK = "v1/permissions/check";
     public static final String PERMISSIONS_BULKCHECK = "v1/permissions/checkbulk";
     public static final String PERMISSIONS_EXPAND = "v1/permissions/expand";
@@ -44,7 +45,7 @@ public class SpiceDbConstants {
 
     public static final String WATCH_SERVICE = "v1/watch";
 
-    //permission response values
+    //Permission response values.
     public static final String HAS_PERMISSION = "PERMISSIONSHIP_HAS_PERMISSION";
     public static final String NO_PERMISSION = "PERMISSIONSHIP_NO_PERMISSION";
     public static final String CONDITIONAL_PERMISSION = "PERMISSIONSHIP_CONDITIONAL_PERMISSION";

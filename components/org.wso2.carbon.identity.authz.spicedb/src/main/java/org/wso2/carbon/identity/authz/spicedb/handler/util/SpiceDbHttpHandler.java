@@ -46,7 +46,8 @@ public class SpiceDbHttpHandler extends HTTPHandler {
     private static final Log LOG = LogFactory.getLog(SpiceDbDataRequestsHandler.class);
 
     @Override
-    public HttpResponse sendGETRequest(String url) throws IOException {
+    public HttpResponse sendGETRequest (String url) throws IOException {
+
         HttpResponse response;
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpGet httpGet = new HttpGet(url);
@@ -60,7 +61,8 @@ public class SpiceDbHttpHandler extends HTTPHandler {
     }
 
     @Override
-    public HttpResponse sendPOSTRequest(String url, JSONObject jsonObject) throws IOException {
+    public HttpResponse sendPOSTRequest (String url, JSONObject jsonObject) throws IOException {
+
         HttpResponse response;
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost(url);
@@ -76,7 +78,8 @@ public class SpiceDbHttpHandler extends HTTPHandler {
     }
 
     @Override
-    public String parseToString(HttpResponse response) throws IOException {
+    public String parseToString (HttpResponse response) throws IOException {
+
         HttpEntity entity = response.getEntity();
         InputStream stream = entity.getContent();
         try (BufferedReader bufferedReader = new BufferedReader(

@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.spicedb;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.json.JSONObject;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbConstants;
@@ -34,9 +32,10 @@ import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponseInterf
  * This class contains methods that handle  all authorization related requests from SpiceDB.
  */
 public class SpiceDbPermissionRequestsHandler {
+
     private static final SpiceDbHttpHandler SPICEDB_HTTP_HANDLER = new SpiceDbHttpHandler();
 
-    public SpiceDbResponseInterface checkAuthorization(SpiceDbRequestInterface authorizationRequest) {
+    public SpiceDbResponseInterface checkAuthorization (SpiceDbRequestInterface authorizationRequest) {
 
         JSONObject object;
         try {
@@ -60,7 +59,8 @@ public class SpiceDbPermissionRequestsHandler {
         }
     }
 
-    public SpiceDbResponseInterface bulkCheckAuthorization(SpiceDbRequestInterface bulkAuthorizationRequest) {
+    public SpiceDbResponseInterface bulkCheckAuthorization (SpiceDbRequestInterface bulkAuthorizationRequest) {
+
         JSONObject object;
         try {
             HttpResponse response = SPICEDB_HTTP_HANDLER.sendPOSTRequest(SpiceDbConstants.BASE_URL +

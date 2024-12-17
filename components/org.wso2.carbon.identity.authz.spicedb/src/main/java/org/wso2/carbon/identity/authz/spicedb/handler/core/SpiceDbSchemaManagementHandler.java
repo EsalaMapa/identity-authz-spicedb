@@ -21,8 +21,8 @@ package org.wso2.carbon.identity.authz.spicedb.handler.core;
 import org.wso2.carbon.identity.oauth2.fga.FGASchemaManagementInterface;
 
 /**
- *
+ * This class processes the data received from spiceDB for Schema Management purposes.
  */
 public class SpiceDbSchemaManagementHandler implements FGASchemaManagementInterface {
-
+    //TODO: (write methods to process data sent to and received from schema management requests.)
 }

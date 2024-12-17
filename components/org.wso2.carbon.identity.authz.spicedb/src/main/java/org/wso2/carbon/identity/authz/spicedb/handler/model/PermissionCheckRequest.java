@@ -28,6 +28,7 @@ import java.util.LinkedHashMap;
  * This class is a model class to create permission requests to SpiceDB.
  */
 public class PermissionCheckRequest implements SpiceDbRequestInterface {
+
     private String resourceObjectType;
     private String resourceObjectId;
     private String permission;
@@ -37,7 +38,7 @@ public class PermissionCheckRequest implements SpiceDbRequestInterface {
     private HashMap<String, Object> context;
     private boolean withTracing;
 
-    public PermissionCheckRequest(String resourceObjectType, String resourceObjectId, String permission,
+    public PermissionCheckRequest (String resourceObjectType, String resourceObjectId, String permission,
                                   String subjectObjectType, String subjectObjectId, HashMap<String, Object> context) {
 
         this.resourceObjectType = resourceObjectType;
@@ -48,7 +49,7 @@ public class PermissionCheckRequest implements SpiceDbRequestInterface {
         this.context = context;
     }
 
-    public PermissionCheckRequest(String resourceObjectType, String resourceObjectId, String permission,
+    public PermissionCheckRequest (String resourceObjectType, String resourceObjectId, String permission,
                                   String subjectObjectType, String subjectObjectId) {
 
         this.resourceObjectType = resourceObjectType;
@@ -58,18 +59,19 @@ public class PermissionCheckRequest implements SpiceDbRequestInterface {
         this.subjectObjectId = subjectObjectId;
     }
 
-    public void setOptionalRelation(String optionalRelation) {
+    public void setOptionalRelation (String optionalRelation) {
 
         this.optionalRelation = optionalRelation;
     }
 
-    public void setWithTracing(boolean withTracing) {
+    public void setWithTracing (boolean withTracing) {
 
         this.withTracing = withTracing;
     }
 
     @Override
     public JSONObject parseToJSON() {
+
         JSONObject jsonObject = new JSONObject();
         HashMap<String, Object> resource = new LinkedHashMap<>();
         resource.put("objectType", this.resourceObjectType);

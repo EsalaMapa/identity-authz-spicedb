@@ -28,10 +28,12 @@ import java.util.HashMap;
  * This class is a model class to receive permission bulk check responses from SpiceDB.
  */
 public class PermissionBulkCheckResponse implements SpiceDbResponseInterface {
+
     private String token;
     private HashMap<String, JSONObject> pairs;
 
-    public PermissionBulkCheckResponse(JSONObject object) {
+    public PermissionBulkCheckResponse (JSONObject object) {
+
         if (object.has("checkedAt")) {
             this.token = object.getString("checkedAt");
             this.pairs = new HashMap<>();

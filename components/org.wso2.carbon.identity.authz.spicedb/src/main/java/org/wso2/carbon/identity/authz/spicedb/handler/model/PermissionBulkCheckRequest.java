@@ -27,13 +27,16 @@ import java.util.ArrayList;
  * This class is a model class to create Permission bulk check requests to SpiceDB.
  */
 public class PermissionBulkCheckRequest implements SpiceDbRequestInterface {
+
     private ArrayList<PermissionCheckRequest> items;
 
-    public PermissionBulkCheckRequest(ArrayList<PermissionCheckRequest> items) {
+    public PermissionBulkCheckRequest (ArrayList<PermissionCheckRequest> items) {
+
         this.items = items;
     }
     @Override
     public JSONObject parseToJSON() {
+
         JSONObject jsonObject = new JSONObject();
         JSONObject[] itemList = new JSONObject[items.size()];
         for (int i = 0; i < items.size(); i++) {

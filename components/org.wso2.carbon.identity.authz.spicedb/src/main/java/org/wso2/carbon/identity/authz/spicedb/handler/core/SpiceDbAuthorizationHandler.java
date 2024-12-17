@@ -36,15 +36,17 @@ import java.util.Objects;
 
 
 /**
- *
+ * This class processes the data received from spiceDB for authorization purposes.
  */
 public class SpiceDbAuthorizationHandler implements FGAuthorizationInterface {
+
     private static final Log LOG = LogFactory.getLog(SpiceDbAuthorizationHandler.class);
     private static final SpiceDbPermissionRequestsHandler SPICEDB_PERMISSION_REQUESTS_HANDLER =
             new SpiceDbPermissionRequestsHandler();
 
     @Override
     public ArrayList<String> getAuthorization (String userID, ArrayList<String> requiredScopes) {
+
         ArrayList<String> authorizedScopes = new ArrayList<>();
         if (requiredScopes.size() == 1) {
             String scope = requiredScopes.get(0);
@@ -102,6 +104,7 @@ public class SpiceDbAuthorizationHandler implements FGAuthorizationInterface {
     }
 
     public PermissionCheckRequest createCheckRequest (String userId, String scope) {
+
         String[] data = scope.split("_");
         String permission = data[1];
         String resourceType = data[2];

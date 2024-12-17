@@ -22,24 +22,25 @@ import org.json.JSONObject;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponseInterface;
 
 /**
- * This class is a model class to receive Error responses from SpiceDB
+ * This class is a model class to receive Error responses from SpiceDB.
  */
 public class ErrorResponse implements SpiceDbResponseInterface {
+
     private String message;
     private String details;
 
-    public ErrorResponse(JSONObject response) {
+    public ErrorResponse (JSONObject response) {
 
         this.message = response.getString("message");
         this.details = response.getString("details");
     }
 
-    public String getMessage() {
+    public String getMessage () {
 
         return message;
     }
 
-    public String getDetails() {
+    public String getDetails () {
 
         return details;
     }

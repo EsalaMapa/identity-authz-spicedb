@@ -26,12 +26,14 @@ import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponseInterf
  * This class is a model class to receive permission check responses from SpiceDB.
  */
 public class PermissionCheckResponse implements SpiceDbResponseInterface {
+
     private String token;
     private String permissionship;
     private JSONObject partialCaveatInfo;
     private Object debugTrace;
 
     public PermissionCheckResponse(JSONObject response) {
+
         if (response.has("checkedAt")) {
             JSONObject checkedAt = response.getJSONObject("checkedAt");
             this.token = checkedAt.getString("token");

@@ -31,5 +31,5 @@ public interface SpiceDbRequestInterface {
      *
      * @return A JSON object with the directory object or relation attributes parsed as a JSON.
      */
-    JSONObject parseToJSON();
+    JSONObject parseToJSON ();
 }
