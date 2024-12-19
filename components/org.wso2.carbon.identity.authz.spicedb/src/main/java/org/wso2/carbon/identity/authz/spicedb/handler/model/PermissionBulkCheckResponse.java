@@ -32,16 +32,22 @@ public class PermissionBulkCheckResponse implements SpiceDbResponseInterface {
     private String token;
     private HashMap<String, JSONObject> pairs;
 
+    private static final String CHECKED_AT_TOKEN = "checkedAt";
+    private static final String RESULTS = "pairs";
+    private static final String RESOURCE = "resource";
+    private static final String RESULT_ITEM = "item";
+    private static final String RESOURCE_ID = "objectId";
+
     public PermissionBulkCheckResponse (JSONObject object) {
 
-        if (object.has("checkedAt")) {
-            this.token = object.getString("checkedAt");
+        if (object.has(CHECKED_AT_TOKEN)) {
+            this.token = object.getString(CHECKED_AT_TOKEN);
             this.pairs = new HashMap<>();
-            JSONArray pairsArray = object.getJSONArray("pairs");
+            JSONArray pairsArray = object.getJSONArray(RESULTS);
             for (int i = 0; i < pairsArray.length(); i++) {
-                JSONObject resource = pairsArray.getJSONObject(i).getJSONObject("resource");
-                JSONObject item = pairsArray.getJSONObject(i).getJSONObject("item");
-                pairs.put(resource.getString("objectId"), item);
+                JSONObject resource = pairsArray.getJSONObject(i).getJSONObject(RESOURCE);
+                JSONObject item = pairsArray.getJSONObject(i).getJSONObject(RESULT_ITEM);
+                pairs.put(resource.getString(RESOURCE_ID), item);
             }
         }
     }

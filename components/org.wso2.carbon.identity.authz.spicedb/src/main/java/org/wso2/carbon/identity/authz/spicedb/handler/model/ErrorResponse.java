@@ -29,10 +29,13 @@ public class ErrorResponse implements SpiceDbResponseInterface {
     private String message;
     private String details;
 
+    private static final String MESSAGE = "message";
+    private static final String DETAILS = "details";
+
     public ErrorResponse (JSONObject response) {
 
-        this.message = response.getString("message");
-        this.details = response.getString("details");
+        this.message = response.getString(MESSAGE);
+        this.details = response.getString(DETAILS);
     }
 
     public String getMessage () {

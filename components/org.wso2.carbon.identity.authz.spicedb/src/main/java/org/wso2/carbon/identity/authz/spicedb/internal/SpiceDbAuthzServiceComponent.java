@@ -56,14 +56,10 @@ public class SpiceDbAuthzServiceComponent {
             SpiceDbSchemaManagementHandler spiceDbSchemaManagementHandler = new SpiceDbSchemaManagementHandler();
             SpiceDbDataManagementHandler spiceDbDataManagementHandler = new SpiceDbDataManagementHandler();
             BundleContext bundleContext = context.getBundleContext();
-            LOG.info("SpiceDB bundle context instantiated.");
             bundleContext.registerService(FGAuthorizationInterface.class, spiceDbAuthorizationHandler, null);
             bundleContext.registerService(FGASchemaManagementInterface.class, spiceDbSchemaManagementHandler, null);
             bundleContext.registerService(FGADataManagementInterface.class, spiceDbDataManagementHandler, null);
-            LOG.info("spiceDB service registered.");
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Application SpiceDB authorizer handler bundle is activated");
-            }
+            LOG.debug("Application SpiceDB handler bundle is activated");
         } catch (Throwable throwable) {
             LOG.error("Error while starting spiceDB authorization component", throwable);
         }
@@ -77,6 +73,6 @@ public class SpiceDbAuthzServiceComponent {
     @Deactivate
     protected void deactivate (ComponentContext context) {
 
-        LOG.debug("Application SpiceDB authorizer handler bundle is deactivated.");
+        LOG.debug("Application SpiceDB handler bundle is deactivated.");
     }
 }

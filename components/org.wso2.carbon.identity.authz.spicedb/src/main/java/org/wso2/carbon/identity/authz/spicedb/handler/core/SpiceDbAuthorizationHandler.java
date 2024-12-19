@@ -45,7 +45,7 @@ public class SpiceDbAuthorizationHandler implements FGAuthorizationInterface {
             new SpiceDbPermissionRequestsHandler();
 
     @Override
-    public ArrayList<String> getAuthorization (String userID, ArrayList<String> requiredScopes) {
+    public ArrayList<String> getFGAuthorizedScopes (String userID, ArrayList<String> requiredScopes) {
 
         ArrayList<String> authorizedScopes = new ArrayList<>();
         if (requiredScopes.size() == 1) {
@@ -54,20 +54,13 @@ public class SpiceDbAuthorizationHandler implements FGAuthorizationInterface {
                     createCheckRequest(userID, scope));
             if (checkResponse instanceof PermissionCheckResponse) {
                 PermissionCheckResponse permissionCheckResponse = (PermissionCheckResponse) checkResponse;
-                if (Objects.equals(permissionCheckResponse.getPermissionship(), SpiceDbConstants.HAS_PERMISSION)) {
-                    authorizedScopes.add(requiredScopes.get(0));
-                } else if (Objects.equals(permissionCheckResponse.getPermissionship(),
-                        SpiceDbConstants.CONDITIONAL_PERMISSION)) {
-                    LOG.warn("Cannot fully authorize due to lack of information. Missing Required Context: " +
-                            permissionCheckResponse.getPartialCaveatInfo().get("missingRequiredContext"));
+                boolean authorized = getAuthorization(permissionCheckResponse);
+                if (authorized) {
+                    authorizedScopes.add(scope);
                 }
             } else if (checkResponse instanceof ErrorResponse) {
                 ErrorResponse errorResponse = (ErrorResponse) checkResponse;
-                LOG.error("Could not authorize." + errorResponse.getMessage());
-                if (LOG.isDebugEnabled()) {
-                    LOG.error("Could not authorize." + errorResponse.getMessage() + "Further Details: " +
-                            errorResponse.getDetails());
-                }
+                handleErrorResponse(errorResponse);
             }
         } else {
             ArrayList<PermissionCheckRequest> items = new ArrayList<>();
@@ -80,24 +73,10 @@ public class SpiceDbAuthorizationHandler implements FGAuthorizationInterface {
             if (bulkCheckResponse instanceof PermissionBulkCheckResponse) {
                 PermissionBulkCheckResponse permissionBulkCheckResponse =
                         (PermissionBulkCheckResponse) bulkCheckResponse;
-                for (String scope : requiredScopes) {
-                    JSONObject item = permissionBulkCheckResponse.getPairs().get(scope.split("_")[3]);
-                    switch (item.getString("permissionship")) {
-                        case SpiceDbConstants.HAS_PERMISSION:
-                            authorizedScopes.add(scope);
-                            break;
-                        case SpiceDbConstants.CONDITIONAL_PERMISSION:
-                            LOG.warn("Cannot fully authorize due to lack of information. Missing Required Context: " +
-                                    item.get("missingRequiredContext"));
-                    }
-                }
+                authorizedScopes.addAll(getBulkAuthorization(permissionBulkCheckResponse, requiredScopes));
             } else if (bulkCheckResponse instanceof ErrorResponse) {
                 ErrorResponse errorResponse = (ErrorResponse) bulkCheckResponse;
-                LOG.error("Could not authorize." + errorResponse.getMessage());
-                if (LOG.isDebugEnabled()) {
-                    LOG.error("Could not authorize." + errorResponse.getMessage() + "Further Details: " +
-                            errorResponse.getDetails());
-                }
+                handleErrorResponse(errorResponse);
             }
         }
         return authorizedScopes;
@@ -111,6 +90,47 @@ public class SpiceDbAuthorizationHandler implements FGAuthorizationInterface {
         String resourceId = data[3];
 
         return new PermissionCheckRequest(resourceType, resourceId,
-                permission, "user", userId);
+                permission, "user", userId, null);
+    }
+
+    public boolean getAuthorization (PermissionCheckResponse checkResponse) {
+
+        if (Objects.equals(checkResponse.getPermissionship(), SpiceDbConstants.HAS_PERMISSION)) {
+            return true;
+        } else if (Objects.equals(checkResponse.getPermissionship(),
+                SpiceDbConstants.CONDITIONAL_PERMISSION)) {
+            LOG.warn("Could not fully authorize due to lack of information. Missing Required Context: " +
+                    checkResponse.getPartialCaveatInfo().get("missingRequiredContext"));
+            return false;
+        }
+        return false;
+    }
+
+    public ArrayList<String> getBulkAuthorization (PermissionBulkCheckResponse bulkCheckResponse,
+                                                   ArrayList<String> requiredScopes) {
+
+        ArrayList<String> authorizedScopes = new ArrayList<>();
+        for (String scope : requiredScopes) {
+            if (bulkCheckResponse.getPairs().containsKey(scope.split("_")[3])) {
+                JSONObject item = bulkCheckResponse.getPairs().get(scope.split("_")[3]);
+                String permissionship = item.getString("permissionship");
+                if (permissionship.equals(SpiceDbConstants.HAS_PERMISSION)) {
+                    authorizedScopes.add(scope);
+                } else if (permissionship.equals(SpiceDbConstants.CONDITIONAL_PERMISSION)) {
+                    LOG.warn("Could not fully authorize due to lack of information. Missing Required Context: " +
+                            item.get("missingRequiredContext"));
+                }
+            }
+
+        }
+        return authorizedScopes;
+    }
+
+    public void handleErrorResponse (ErrorResponse errorResponse) {
+        LOG.error("Could not authorize." + errorResponse.getMessage());
+        if (LOG.isDebugEnabled()) {
+            LOG.error("Could not authorize." + errorResponse.getMessage() + "Further Details: " +
+                    errorResponse.getDetails());
+        }
     }
 }

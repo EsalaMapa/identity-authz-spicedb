@@ -32,18 +32,24 @@ public class PermissionCheckResponse implements SpiceDbResponseInterface {
     private JSONObject partialCaveatInfo;
     private Object debugTrace;
 
+    private static final String CHECKED_AT = "checkedAt";
+    private static final String ZED_TOKEN = "token";
+    private static final String PERMISSION_RESULT = "permissionship";
+    private static final String PARTIAL_CAVEAT_INFO = "partialCaveatInfo";
+    private static final String DEBUG_TRACE = "debugTrace";
+
     public PermissionCheckResponse(JSONObject response) {
 
-        if (response.has("checkedAt")) {
-            JSONObject checkedAt = response.getJSONObject("checkedAt");
-            this.token = checkedAt.getString("token");
-            this.permissionship = response.getString("permissionship");
+        if (response.has(CHECKED_AT)) {
+            JSONObject checkedAt = response.getJSONObject(CHECKED_AT);
+            this.token = checkedAt.getString(ZED_TOKEN);
+            this.permissionship = response.getString(PERMISSION_RESULT);
             if (this.permissionship.equals(SpiceDbConstants.CONDITIONAL_PERMISSION)) {
-                this.partialCaveatInfo = response.getJSONObject("partialCaveatinfo");
+                this.partialCaveatInfo = response.getJSONObject(PARTIAL_CAVEAT_INFO);
             }
         }
-        if (response.has("debugTrace") && response.get("debugTrace") != null) {
-            this.debugTrace = response.getJSONObject("debugTrace");
+        if (response.has(DEBUG_TRACE) && response.get(DEBUG_TRACE) != null) {
+            this.debugTrace = response.getJSONObject(DEBUG_TRACE);
         }
     }
 

@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -29,7 +27,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONObject;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbConstants;
-import org.wso2.carbon.identity.authz.spicedb.handler.spicedb.SpiceDbDataRequestsHandler;
 import org.wso2.carbon.identity.oauth2.fga.HTTPHandler;
 
 import java.io.BufferedReader;
@@ -43,8 +40,6 @@ import java.nio.charset.StandardCharsets;
  */
 public class SpiceDbHttpHandler extends HTTPHandler {
 
-    private static final Log LOG = LogFactory.getLog(SpiceDbDataRequestsHandler.class);
-
     @Override
     public HttpResponse sendGETRequest (String url) throws IOException {
 
@@ -53,10 +48,6 @@ public class SpiceDbHttpHandler extends HTTPHandler {
             HttpGet httpGet = new HttpGet(url);
             response = httpClient.execute(httpGet);
         }
-        if (response.getStatusLine().getStatusCode() / 100 == 2) {
-            LOG.warn("GET request did not receive a successful response. Response Received: " +
-                    response.getStatusLine());
-        }
         return response;
     }
 
@@ -64,15 +55,12 @@ public class SpiceDbHttpHandler extends HTTPHandler {
     public HttpResponse sendPOSTRequest (String url, JSONObject jsonObject) throws IOException {
 
         HttpResponse response;
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost httpPost = new HttpPost(url);
-        httpPost.setHeader("Content-Type", "application/json");
-        httpPost.setHeader("Authorization", SpiceDbConstants.PRE_SHARED_KEY);
-        httpPost.setEntity(new StringEntity(jsonObject.toString()));
-        response = httpClient.execute(httpPost);
-        if (response.getStatusLine().getStatusCode() / 100 == 2) {
-            LOG.warn("POST request did not receive a successful response. Response Received: " +
-                    response.getStatusLine());
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+            HttpPost httpPost = new HttpPost(url);
+            httpPost.setHeader("Content-Type", "application/json");
+            httpPost.setHeader("Authorization", SpiceDbConstants.PRE_SHARED_KEY);
+            httpPost.setEntity(new StringEntity(jsonObject.toString()));
+            response = httpClient.execute(httpPost);
         }
         return response;
     }

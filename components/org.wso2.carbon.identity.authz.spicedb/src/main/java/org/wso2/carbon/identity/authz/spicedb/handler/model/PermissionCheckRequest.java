@@ -49,16 +49,6 @@ public class PermissionCheckRequest implements SpiceDbRequestInterface {
         this.context = context;
     }
 
-    public PermissionCheckRequest (String resourceObjectType, String resourceObjectId, String permission,
-                                  String subjectObjectType, String subjectObjectId) {
-
-        this.resourceObjectType = resourceObjectType;
-        this.resourceObjectId = resourceObjectId;
-        this.permission = permission;
-        this.subjectObjectType = subjectObjectType;
-        this.subjectObjectId = subjectObjectId;
-    }
-
     public void setOptionalRelation (String optionalRelation) {
 
         this.optionalRelation = optionalRelation;
