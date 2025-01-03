@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -28,8 +28,9 @@ import org.wso2.carbon.identity.authz.spicedb.handler.model.PermissionBulkCheckR
 import org.wso2.carbon.identity.authz.spicedb.handler.model.PermissionCheckRequest;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.PermissionCheckResponse;
 import org.wso2.carbon.identity.authz.spicedb.handler.spicedb.SpiceDbPermissionRequestsHandler;
-import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponseInterface;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponse;
 import org.wso2.carbon.identity.oauth2.fga.FGAuthorizationInterface;
+import org.wso2.carbon.identity.oauth2.fga.FGAuthzReqContext;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -41,17 +42,21 @@ import java.util.Objects;
 public class SpiceDbAuthorizationHandler implements FGAuthorizationInterface {
 
     private static final Log LOG = LogFactory.getLog(SpiceDbAuthorizationHandler.class);
-    private static final SpiceDbPermissionRequestsHandler SPICEDB_PERMISSION_REQUESTS_HANDLER =
-            new SpiceDbPermissionRequestsHandler();
+    private final SpiceDbPermissionRequestsHandler spiceDbPermissionRequestsHandler;
+
+    public SpiceDbAuthorizationHandler() {
+
+        this.spiceDbPermissionRequestsHandler = new SpiceDbPermissionRequestsHandler();
+    }
 
     @Override
-    public ArrayList<String> getFGAuthorizedScopes (String userID, ArrayList<String> requiredScopes) {
+    public ArrayList<String> getFGAuthorizedScopes(FGAuthzReqContext reqContext) {
 
         ArrayList<String> authorizedScopes = new ArrayList<>();
-        if (requiredScopes.size() == 1) {
-            String scope = requiredScopes.get(0);
-            SpiceDbResponseInterface checkResponse = SPICEDB_PERMISSION_REQUESTS_HANDLER.checkAuthorization(
-                    createCheckRequest(userID, scope));
+        if (reqContext.getRequestedScopes().size() == 1) {
+            String scope = reqContext.getRequestedScopes().get(0);
+            SpiceDbResponse checkResponse = spiceDbPermissionRequestsHandler.checkAuthorization(
+                    createCheckRequest(reqContext.getSubjectId(), scope));
             if (checkResponse instanceof PermissionCheckResponse) {
                 PermissionCheckResponse permissionCheckResponse = (PermissionCheckResponse) checkResponse;
                 boolean authorized = getAuthorization(permissionCheckResponse);
@@ -64,16 +69,17 @@ public class SpiceDbAuthorizationHandler implements FGAuthorizationInterface {
             }
         } else {
             ArrayList<PermissionCheckRequest> items = new ArrayList<>();
-            for (String scope : requiredScopes) {
-                items.add(createCheckRequest(userID, scope));
+            for (String scope : reqContext.getRequestedScopes()) {
+                items.add(createCheckRequest(reqContext.getSubjectId(), scope));
             }
             PermissionBulkCheckRequest bulkCheckRequest = new PermissionBulkCheckRequest(items);
-            SpiceDbResponseInterface bulkCheckResponse = SPICEDB_PERMISSION_REQUESTS_HANDLER
+            SpiceDbResponse bulkCheckResponse = spiceDbPermissionRequestsHandler
                     .bulkCheckAuthorization(bulkCheckRequest);
             if (bulkCheckResponse instanceof PermissionBulkCheckResponse) {
                 PermissionBulkCheckResponse permissionBulkCheckResponse =
                         (PermissionBulkCheckResponse) bulkCheckResponse;
-                authorizedScopes.addAll(getBulkAuthorization(permissionBulkCheckResponse, requiredScopes));
+                authorizedScopes.addAll(getBulkAuthorization(permissionBulkCheckResponse,
+                        reqContext.getRequestedScopes()));
             } else if (bulkCheckResponse instanceof ErrorResponse) {
                 ErrorResponse errorResponse = (ErrorResponse) bulkCheckResponse;
                 handleErrorResponse(errorResponse);
@@ -82,7 +88,7 @@ public class SpiceDbAuthorizationHandler implements FGAuthorizationInterface {
         return authorizedScopes;
     }
 
-    public PermissionCheckRequest createCheckRequest (String userId, String scope) {
+    private PermissionCheckRequest createCheckRequest(String userId, String scope) {
 
         String[] data = scope.split("_");
         String permission = data[1];
@@ -93,7 +99,7 @@ public class SpiceDbAuthorizationHandler implements FGAuthorizationInterface {
                 permission, "user", userId, null);
     }
 
-    public boolean getAuthorization (PermissionCheckResponse checkResponse) {
+    private boolean getAuthorization(PermissionCheckResponse checkResponse) {
 
         if (Objects.equals(checkResponse.getPermissionship(), SpiceDbConstants.HAS_PERMISSION)) {
             return true;
@@ -106,7 +112,7 @@ public class SpiceDbAuthorizationHandler implements FGAuthorizationInterface {
         return false;
     }
 
-    public ArrayList<String> getBulkAuthorization (PermissionBulkCheckResponse bulkCheckResponse,
+    private ArrayList<String> getBulkAuthorization(PermissionBulkCheckResponse bulkCheckResponse,
                                                    ArrayList<String> requiredScopes) {
 
         ArrayList<String> authorizedScopes = new ArrayList<>();
@@ -126,7 +132,7 @@ public class SpiceDbAuthorizationHandler implements FGAuthorizationInterface {
         return authorizedScopes;
     }
 
-    public void handleErrorResponse (ErrorResponse errorResponse) {
+    private void handleErrorResponse(ErrorResponse errorResponse) {
         LOG.error("Could not authorize." + errorResponse.getMessage());
         if (LOG.isDebugEnabled()) {
             LOG.error("Could not authorize." + errorResponse.getMessage() + "Further Details: " +
