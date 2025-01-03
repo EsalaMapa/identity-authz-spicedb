@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -29,7 +29,7 @@ import org.wso2.carbon.identity.authz.spicedb.handler.model.PermissionBulkCheckR
 import org.wso2.carbon.identity.authz.spicedb.handler.model.PermissionCheckResponse;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbHttpHandler;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbRequestInterface;
-import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponseInterface;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponse;
 
 /**
  * This class contains methods that handle  all authorization related requests from SpiceDB.
@@ -40,7 +40,7 @@ public class SpiceDbPermissionRequestsHandler {
 
     private static final SpiceDbHttpHandler SPICEDB_HTTP_HANDLER = new SpiceDbHttpHandler();
 
-    public SpiceDbResponseInterface checkAuthorization (SpiceDbRequestInterface authorizationRequest) {
+    public SpiceDbResponse checkAuthorization(SpiceDbRequestInterface authorizationRequest) {
 
         JSONObject object;
         try {
@@ -65,7 +65,7 @@ public class SpiceDbPermissionRequestsHandler {
         }
     }
 
-    public SpiceDbResponseInterface bulkCheckAuthorization (SpiceDbRequestInterface bulkAuthorizationRequest) {
+    public SpiceDbResponse bulkCheckAuthorization(SpiceDbRequestInterface bulkAuthorizationRequest) {
 
         JSONObject object;
         try {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -20,14 +20,14 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponseInterface;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponse;
 
 import java.util.HashMap;
 
 /**
  * This class is a model class to receive permission bulk check responses from SpiceDB.
  */
-public class PermissionBulkCheckResponse implements SpiceDbResponseInterface {
+public class PermissionBulkCheckResponse implements SpiceDbResponse {
 
     private String token;
     private HashMap<String, JSONObject> pairs;
@@ -38,7 +38,7 @@ public class PermissionBulkCheckResponse implements SpiceDbResponseInterface {
     private static final String RESULT_ITEM = "item";
     private static final String RESOURCE_ID = "objectId";
 
-    public PermissionBulkCheckResponse (JSONObject object) {
+    public PermissionBulkCheckResponse(JSONObject object) {
 
         if (object.has(CHECKED_AT_TOKEN)) {
             this.token = object.getString(CHECKED_AT_TOKEN);

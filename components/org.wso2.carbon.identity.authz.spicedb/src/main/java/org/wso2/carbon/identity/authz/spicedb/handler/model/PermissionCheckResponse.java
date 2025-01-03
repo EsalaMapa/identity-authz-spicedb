@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -20,12 +20,12 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
 import org.json.JSONObject;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbConstants;
-import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponseInterface;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponse;
 
 /**
  * This class is a model class to receive permission check responses from SpiceDB.
  */
-public class PermissionCheckResponse implements SpiceDbResponseInterface {
+public class PermissionCheckResponse implements SpiceDbResponse {
 
     private String token;
     private String permissionship;

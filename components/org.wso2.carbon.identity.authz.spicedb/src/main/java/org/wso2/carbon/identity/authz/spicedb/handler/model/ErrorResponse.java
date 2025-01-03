@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -19,12 +19,12 @@
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
 import org.json.JSONObject;
-import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponseInterface;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponse;
 
 /**
  * This class is a model class to receive Error responses from SpiceDB.
  */
-public class ErrorResponse implements SpiceDbResponseInterface {
+public class ErrorResponse implements SpiceDbResponse {
 
     private String message;
     private String details;
@@ -32,18 +32,18 @@ public class ErrorResponse implements SpiceDbResponseInterface {
     private static final String MESSAGE = "message";
     private static final String DETAILS = "details";
 
-    public ErrorResponse (JSONObject response) {
+    public ErrorResponse(JSONObject response) {
 
         this.message = response.getString(MESSAGE);
         this.details = response.getString(DETAILS);
     }
 
-    public String getMessage () {
+    public String getMessage() {
 
         return message;
     }
 
-    public String getDetails () {
+    public String getDetails() {
 
         return details;
     }

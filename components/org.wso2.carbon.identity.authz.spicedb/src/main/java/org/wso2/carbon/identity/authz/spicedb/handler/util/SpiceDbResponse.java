@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -22,6 +22,6 @@ package org.wso2.carbon.identity.authz.spicedb.handler.util;
  * This interface acts as a marker response model for spiceDB.
  * All the response models implement this interface.
  */
-public interface SpiceDbResponseInterface {
+public interface SpiceDbResponse {
 
 }
