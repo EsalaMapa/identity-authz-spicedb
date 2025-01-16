@@ -27,7 +27,7 @@ import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponse;
 public class ErrorResponse implements SpiceDbResponse {
 
     private String message;
-    private String details;
+    private JSONObject details;
 
     private static final String MESSAGE = "message";
     private static final String DETAILS = "details";
@@ -35,7 +35,9 @@ public class ErrorResponse implements SpiceDbResponse {
     public ErrorResponse(JSONObject response) {
 
         this.message = response.getString(MESSAGE);
-        this.details = response.getString(DETAILS);
+        if (response.has(DETAILS)) {
+            this.details = response.getJSONObject(DETAILS);
+        }
     }
 
     public String getMessage() {
@@ -43,7 +45,7 @@ public class ErrorResponse implements SpiceDbResponse {
         return message;
     }
 
-    public String getDetails() {
+    public JSONObject getDetails() {
 
         return details;
     }

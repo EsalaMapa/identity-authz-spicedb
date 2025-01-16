@@ -48,7 +48,7 @@ public class PermissionCheckResponse implements SpiceDbResponse {
                 this.partialCaveatInfo = response.getJSONObject(PARTIAL_CAVEAT_INFO);
             }
         }
-        if (response.has(DEBUG_TRACE) && response.get(DEBUG_TRACE) != null) {
+        if (response.has(DEBUG_TRACE) && !response.isNull(DEBUG_TRACE)) {
             this.debugTrace = response.getJSONObject(DEBUG_TRACE);
         }
     }
