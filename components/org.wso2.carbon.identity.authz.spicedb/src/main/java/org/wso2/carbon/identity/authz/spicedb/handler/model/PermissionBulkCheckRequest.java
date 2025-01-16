@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -19,18 +19,18 @@
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
 import org.json.JSONObject;
-import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbRequestInterface;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbRequest;
 
 import java.util.ArrayList;
 
 /**
  * This class is a model class to create Permission bulk check requests to SpiceDB.
  */
-public class PermissionBulkCheckRequest implements SpiceDbRequestInterface {
+public class PermissionBulkCheckRequest implements SpiceDbRequest {
 
     private ArrayList<PermissionCheckRequest> items;
 
-    public PermissionBulkCheckRequest (ArrayList<PermissionCheckRequest> items) {
+    public PermissionBulkCheckRequest(ArrayList<PermissionCheckRequest> items) {
 
         this.items = items;
     }

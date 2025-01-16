@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -24,12 +24,12 @@ import org.json.JSONObject;
  * This interface acts as the generic request model for spiceDB.
  * All the request models implement this interface.
  */
-public interface SpiceDbRequestInterface {
+public interface SpiceDbRequest {
 
     /**
      * Parse the entity into a JSON object.
      *
      * @return A JSON object with the directory object or relation attributes parsed as a JSON.
      */
-    JSONObject parseToJSON ();
+    JSONObject parseToJSON();
 }

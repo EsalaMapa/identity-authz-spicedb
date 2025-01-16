@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
 import org.json.JSONObject;
-import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbRequestInterface;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbRequest;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -27,7 +27,7 @@ import java.util.LinkedHashMap;
 /**
  * This class is a model class to create permission requests to SpiceDB.
  */
-public class PermissionCheckRequest implements SpiceDbRequestInterface {
+public class PermissionCheckRequest implements SpiceDbRequest {
 
     private String resourceObjectType;
     private String resourceObjectId;
@@ -38,7 +38,7 @@ public class PermissionCheckRequest implements SpiceDbRequestInterface {
     private HashMap<String, Object> context;
     private boolean withTracing;
 
-    public PermissionCheckRequest (String resourceObjectType, String resourceObjectId, String permission,
+    public PermissionCheckRequest(String resourceObjectType, String resourceObjectId, String permission,
                                   String subjectObjectType, String subjectObjectId, HashMap<String, Object> context) {
 
         this.resourceObjectType = resourceObjectType;
@@ -49,7 +49,7 @@ public class PermissionCheckRequest implements SpiceDbRequestInterface {
         this.context = context;
     }
 
-    public void setOptionalRelation (String optionalRelation) {
+    public void setOptionalRelation(String optionalRelation) {
 
         this.optionalRelation = optionalRelation;
     }
