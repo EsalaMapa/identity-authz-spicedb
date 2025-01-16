@@ -23,12 +23,12 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.json.JSONObject;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbConstants;
-import org.wso2.carbon.identity.authz.spicedb.handler.core.SpiceDbAuthorizationHandler;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.ErrorResponse;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.PermissionBulkCheckResponse;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.PermissionCheckResponse;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.IdentityAuthzSpicedbException;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbHttpHandler;
-import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbRequestInterface;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbRequest;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponse;
 
 /**
@@ -36,21 +36,21 @@ import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponse;
  */
 public class SpiceDbPermissionRequestsHandler {
 
-    private static final Log LOG = LogFactory.getLog(SpiceDbAuthorizationHandler.class);
-
     private static final SpiceDbHttpHandler SPICEDB_HTTP_HANDLER = new SpiceDbHttpHandler();
 
-    public SpiceDbResponse checkAuthorization(SpiceDbRequestInterface authorizationRequest) {
+    public SpiceDbResponse checkAuthorization(SpiceDbRequest authorizationRequest) throws
+            IdentityAuthzSpicedbException {
 
         JSONObject object;
         try {
             HttpResponse response = SPICEDB_HTTP_HANDLER.sendPOSTRequest(SpiceDbConstants.BASE_URL +
-                            SpiceDbConstants.PERMISSION_CHECK, authorizationRequest.parseToJSON());
+                    SpiceDbConstants.PERMISSION_CHECK, authorizationRequest.parseToJSON());
             object = new JSONObject(SPICEDB_HTTP_HANDLER.parseToString(response));
             int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode == 200) {
+            if (statusCode == SpiceDbConstants.STATUS_OK) {
                 return new PermissionCheckResponse(object);
-            } else if (400 <= statusCode && statusCode <= 511) {
+            } else if (SpiceDbConstants.BAD_REQUEST <= statusCode &&
+                    statusCode <= SpiceDbConstants.NETWORK_AUTHENTICATION_REQUIRED) {
                 return new ErrorResponse(object);
             } else {
                 JSONObject cannotIdentifyStatusCode = new JSONObject("{\n\"message\": \"Cannot identify error code." +
@@ -58,14 +58,12 @@ public class SpiceDbPermissionRequestsHandler {
                 return new ErrorResponse(cannotIdentifyStatusCode);
             }
         } catch (Exception e) {
-            LOG.error("An error occurred while trying to check permission.", e);
-            JSONObject errorOccurred = new JSONObject("{\n\"message\": \"" + e.getMessage() +
-                    "\"\n\"" + "details\": \"Cannot provide details. Please check spiceDB connection.\"");
-            return new ErrorResponse(errorOccurred);
+            throw new IdentityAuthzSpicedbException("Error occurred while checking authorization", e);
         }
     }
 
-    public SpiceDbResponse bulkCheckAuthorization(SpiceDbRequestInterface bulkAuthorizationRequest) {
+    public SpiceDbResponse bulkCheckAuthorization(SpiceDbRequest bulkAuthorizationRequest) throws
+            IdentityAuthzSpicedbException {
 
         JSONObject object;
         try {
@@ -73,9 +71,10 @@ public class SpiceDbPermissionRequestsHandler {
                     SpiceDbConstants.PERMISSIONS_BULKCHECK, bulkAuthorizationRequest.parseToJSON());
             object = new JSONObject(SPICEDB_HTTP_HANDLER.parseToString(response));
             int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode == 200) {
+            if (statusCode == SpiceDbConstants.STATUS_OK) {
                 return new PermissionBulkCheckResponse(object);
-            } else if (400 <= statusCode && statusCode <= 511) {
+            } else if (SpiceDbConstants.BAD_REQUEST <= statusCode &&
+                    statusCode <= SpiceDbConstants.NETWORK_AUTHENTICATION_REQUIRED) {
                 return new ErrorResponse(object);
             } else {
                 JSONObject cannotIdentifyStatusCode = new JSONObject("{\n\"message\": \"Cannot identify error code." +
@@ -83,10 +82,7 @@ public class SpiceDbPermissionRequestsHandler {
                 return new ErrorResponse(cannotIdentifyStatusCode);
             }
         } catch (Exception e) {
-            LOG.error("An error occurred while trying to bulk check permissions.", e);
-            JSONObject errorOccurred = new JSONObject("{\n\"message\": \"" + e.getMessage() +
-                    "\"\n\"" + "details\": \"Cannot provide details. Please check spiceDB connection.\"");
-            return new ErrorResponse(errorOccurred);
+            throw new IdentityAuthzSpicedbException("Error occurred while bulk checking authorization", e);
         }
     }
 }
