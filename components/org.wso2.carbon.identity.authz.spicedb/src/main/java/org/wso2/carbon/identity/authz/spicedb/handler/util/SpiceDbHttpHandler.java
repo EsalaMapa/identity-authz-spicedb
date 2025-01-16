@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -27,7 +27,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONObject;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbConstants;
-import org.wso2.carbon.identity.oauth2.fga.HTTPHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,10 +37,9 @@ import java.nio.charset.StandardCharsets;
 /**
  * This class is to create and send HTTP requests and receive responses.
  */
-public class SpiceDbHttpHandler extends HTTPHandler {
+public class SpiceDbHttpHandler {
 
-    @Override
-    public HttpResponse sendGETRequest (String url) throws IOException {
+    public HttpResponse sendGETRequest(String url) throws IOException {
 
         HttpResponse response;
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
@@ -51,8 +49,7 @@ public class SpiceDbHttpHandler extends HTTPHandler {
         return response;
     }
 
-    @Override
-    public HttpResponse sendPOSTRequest (String url, JSONObject jsonObject) throws IOException {
+    public HttpResponse sendPOSTRequest(String url, JSONObject jsonObject) throws IOException {
 
         HttpResponse response;
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
@@ -65,8 +62,7 @@ public class SpiceDbHttpHandler extends HTTPHandler {
         return response;
     }
 
-    @Override
-    public String parseToString (HttpResponse response) throws IOException {
+    public String parseToString(HttpResponse response) throws IOException {
 
         HttpEntity entity = response.getEntity();
         InputStream stream = entity.getContent();

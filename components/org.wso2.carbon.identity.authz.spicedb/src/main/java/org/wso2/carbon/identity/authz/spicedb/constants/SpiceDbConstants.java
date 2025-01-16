@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -18,14 +18,16 @@
 
 package org.wso2.carbon.identity.authz.spicedb.constants;
 
+import org.wso2.carbon.identity.oauth2.fga.FGAConstants;
+
 /**
  * This class contains all the constant values used throughout this implementation.
  */
 public class SpiceDbConstants {
 
     //General api requirements.
-    public static final String BASE_URL = "http://localhost:8443/";
-    public static final String PRE_SHARED_KEY = "";
+    public static final String BASE_URL = FGAConstants.FGA_ENGINE_BASE_URL;
+    public static final String PRE_SHARED_KEY = FGAConstants.FGA_ENGINE_PRE_SHARED_KEY;
 
     //Api endpoints.
     public static final String PERMISSION_CHECK = "v1/permissions/check";
@@ -49,5 +51,10 @@ public class SpiceDbConstants {
     public static final String HAS_PERMISSION = "PERMISSIONSHIP_HAS_PERMISSION";
     public static final String NO_PERMISSION = "PERMISSIONSHIP_NO_PERMISSION";
     public static final String CONDITIONAL_PERMISSION = "PERMISSIONSHIP_CONDITIONAL_PERMISSION";
+
+    //Api response codes
+    public static final int STATUS_OK = 200;
+    public static final int BAD_REQUEST = 400;
+    public static final int NETWORK_AUTHENTICATION_REQUIRED = 511;
 
 }
