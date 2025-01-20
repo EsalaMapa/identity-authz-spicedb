@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+  ~ Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
   ~
   ~ WSO2 LLC. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
@@ -239,18 +239,6 @@
                 <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth</artifactId>
                 <version>${org.wso2.carbon.identity.inbound.auth.oauth2.version}</version>
-            </dependency>
-            <!--osgi dependencies-->
-            <dependency>
-                <groupId>org.wso2.eclipse.osgi</groupId>
-                <artifactId>org.eclipse.osgi.services</artifactId>
-                <version>${equinox.osgi.services.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.osgi</groupId>
-                <artifactId>org.eclipse.osgi</artifactId>
-                <version>${org.eclipse.osgi.version}</version>
-                <scope>compile</scope>
             </dependency>
             <!--Test dependencies-->
             <dependency>

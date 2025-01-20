@@ -1,5 +1,5 @@
 <!--
-  ~  Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+  ~  Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
   ~
   ~  WSO2 LLC. licenses this file to you under the Apache License,
   ~  Version 2.0 (the "License"); you may not use this file except
@@ -77,15 +77,6 @@
         </plugins>
     </build>
     <dependencies>
-        <!--osgi dependencies-->
-        <dependency>
-            <groupId>org.wso2.eclipse.osgi</groupId>
-            <artifactId>org.eclipse.osgi.services</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.osgi</groupId>
-            <artifactId>org.eclipse.osgi</artifactId>
-        </dependency>
         <!--Carbon Identity Inbound Authentication OAuth dependency-->
         <dependency>
             <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
