@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponse;
 
@@ -26,17 +27,20 @@ import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponse;
  */
 public class ErrorResponse implements SpiceDbResponse {
 
+    private int code;
     private String message;
-    private JSONObject details;
+    private JSONArray details;
 
+    private static final String CODE = "code";
     private static final String MESSAGE = "message";
     private static final String DETAILS = "details";
 
     public ErrorResponse(JSONObject response) {
 
+        this.code = response.getInt(CODE);
         this.message = response.getString(MESSAGE);
         if (response.has(DETAILS)) {
-            this.details = response.getJSONObject(DETAILS);
+            this.details = response.getJSONArray(DETAILS);
         }
     }
 
@@ -45,8 +49,13 @@ public class ErrorResponse implements SpiceDbResponse {
         return message;
     }
 
-    public JSONObject getDetails() {
+    public JSONArray getDetails() {
 
         return details;
+    }
+
+    public int getCode() {
+
+        return code;
     }
 }
