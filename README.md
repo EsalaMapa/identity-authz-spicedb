@@ -16,9 +16,9 @@ carbon/identity/ application/authz/spicedb/constants/SpiceDbConstants.java``and 
 base url. (If you are running on ``localhost:8443`` port this step is not necessary.)
 3. Stay in the same file and add the gRPC pre shared key you created with the spiceDB instance to the ``PRE_SHARED_KEY``
 field.
-3. Build this repository and get the ``.jar`` file from ``identity-authz-spicedb\target``.
-4. Add the ``.jar`` file to ``\repository\components\dropins`` folder in wso2is pack.
-5. Restart WSO2 Identity Server.
+4. Build this repository and get the ``.jar`` file from ``identity-authz-spicedb\target``.
+5. Add the ``.jar`` file to ``\repository\components\dropins`` folder in wso2is pack.
+6. Restart WSO2 Identity Server.
 
 ## Building from the source
 
