@@ -35,14 +35,16 @@ public class SpiceDbErrorResponse implements SpiceDbResponse {
     private static final String CODE = "code";
     private static final String MESSAGE = "message";
     private static final String DETAILS = "details";
+
     public SpiceDbErrorResponse(JSONObject response) {
 
-        JSONObject error = response.getJSONObject(ERROR);
-        this.code = String.valueOf(error.getInt(CODE));
-        this.message = error.getString(MESSAGE);
-        if (error.has(DETAILS)) {
-            this.details = error.getJSONArray(DETAILS);
+        JSONObject error = response.optJSONObject(ERROR);
+        this.code = String.valueOf(error != null ? error.getInt(CODE) : response.getInt(CODE));
+        this.message = error != null ? error.getString(MESSAGE) : response.getString(MESSAGE);
+        if (error != null ? error.has(DETAILS) : response.has(DETAILS)) {
+            this.details = error != null ? error.getJSONArray(DETAILS) : response.getJSONArray(DETAILS);
         }
+
     }
 
     public String getMessage() {
