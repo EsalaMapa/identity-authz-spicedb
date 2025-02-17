@@ -25,22 +25,23 @@ import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponse;
 /**
  * This class is a model class to receive Error responses from SpiceDB.
  */
-public class ErrorResponse implements SpiceDbResponse {
+public class SpiceDbErrorResponse implements SpiceDbResponse {
 
-    private int code;
+    private String code;
     private String message;
     private JSONArray details;
 
+    private static final String ERROR = "error";
     private static final String CODE = "code";
     private static final String MESSAGE = "message";
     private static final String DETAILS = "details";
+    public SpiceDbErrorResponse(JSONObject response) {
 
-    public ErrorResponse(JSONObject response) {
-
-        this.code = response.getInt(CODE);
-        this.message = response.getString(MESSAGE);
-        if (response.has(DETAILS)) {
-            this.details = response.getJSONArray(DETAILS);
+        JSONObject error = response.getJSONObject(ERROR);
+        this.code = String.valueOf(error.getInt(CODE));
+        this.message = error.getString(MESSAGE);
+        if (error.has(DETAILS)) {
+            this.details = error.getJSONArray(DETAILS);
         }
     }
 
@@ -54,7 +55,7 @@ public class ErrorResponse implements SpiceDbResponse {
         return details;
     }
 
-    public int getCode() {
+    public String getCode() {
 
         return code;
     }

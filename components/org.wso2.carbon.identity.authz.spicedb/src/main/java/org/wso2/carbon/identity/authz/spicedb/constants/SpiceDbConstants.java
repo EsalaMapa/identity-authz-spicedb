@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.identity.authz.spicedb.constants;
 
-import org.wso2.carbon.identity.oauth2.fga.FGAConstants;
+import org.wso2.carbon.identity.oauth2.fga.core.FGAConstants;
 
 /**
  * This class contains all the constant values used throughout this implementation.

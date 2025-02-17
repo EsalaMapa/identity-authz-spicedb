@@ -20,12 +20,11 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
 import org.json.JSONObject;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbConstants;
-import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponse;
 
 /**
  * This class is a model class to receive permission check responses from SpiceDB.
  */
-public class PermissionCheckResponse implements SpiceDbResponse {
+public class PermissionCheckResponse {
 
     private String token;
     private String permissionship;
@@ -71,5 +70,10 @@ public class PermissionCheckResponse implements SpiceDbResponse {
     public Object getDebugTrace() {
 
         return debugTrace;
+    }
+
+    public boolean isAuthorized() {
+
+        return getPermissionship().equals(SpiceDbConstants.HAS_PERMISSION);
     }
 }

@@ -18,12 +18,12 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.util;
 
-import org.wso2.carbon.identity.base.IdentityException;
+import org.wso2.carbon.identity.oauth2.fga.FGAuthorizationException;
 
 /**
  * This class is used to handle exceptions thrown by the SpiceDB authorization handler.
  */
-public class IdentityAuthzSpicedbException extends IdentityException {
+public class IdentityAuthzSpicedbException extends FGAuthorizationException {
 
     private String errorCode = null;
 

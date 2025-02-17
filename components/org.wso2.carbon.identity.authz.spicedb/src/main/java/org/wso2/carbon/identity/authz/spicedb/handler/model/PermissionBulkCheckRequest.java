@@ -19,22 +19,25 @@
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
 import org.json.JSONObject;
-import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbRequest;
+import org.wso2.carbon.identity.oauth2.fga.models.AuthzCheckRequest;
 
 import java.util.ArrayList;
 
 /**
  * This class is a model class to create Permission bulk check requests to SpiceDB.
  */
-public class PermissionBulkCheckRequest implements SpiceDbRequest {
+public class PermissionBulkCheckRequest {
 
     private ArrayList<PermissionCheckRequest> items;
 
-    public PermissionBulkCheckRequest(ArrayList<PermissionCheckRequest> items) {
+    public PermissionBulkCheckRequest(ArrayList<AuthzCheckRequest> items) {
 
-        this.items = items;
+        this.items = new ArrayList<>();
+        for (AuthzCheckRequest item : items) {
+            this.items.add(new PermissionCheckRequest(item));
+        }
     }
-    @Override
+
     public JSONObject parseToJSON() {
 
         JSONObject jsonObject = new JSONObject();

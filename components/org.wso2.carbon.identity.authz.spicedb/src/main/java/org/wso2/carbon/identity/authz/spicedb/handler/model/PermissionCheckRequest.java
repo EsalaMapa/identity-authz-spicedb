@@ -19,7 +19,7 @@
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
 import org.json.JSONObject;
-import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbRequest;
+import org.wso2.carbon.identity.oauth2.fga.models.AuthzCheckRequest;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -27,7 +27,7 @@ import java.util.LinkedHashMap;
 /**
  * This class is a model class to create permission requests to SpiceDB.
  */
-public class PermissionCheckRequest implements SpiceDbRequest {
+public class PermissionCheckRequest  {
 
     private String resourceObjectType;
     private String resourceObjectId;
@@ -38,15 +38,13 @@ public class PermissionCheckRequest implements SpiceDbRequest {
     private HashMap<String, Object> context;
     private boolean withTracing;
 
-    public PermissionCheckRequest(String resourceObjectType, String resourceObjectId, String permission,
-                                  String subjectObjectType, String subjectObjectId, HashMap<String, Object> context) {
+    public PermissionCheckRequest(AuthzCheckRequest authzCheckRequest) {
 
-        this.resourceObjectType = resourceObjectType;
-        this.resourceObjectId = resourceObjectId;
-        this.permission = permission;
-        this.subjectObjectType = subjectObjectType;
-        this.subjectObjectId = subjectObjectId;
-        this.context = context;
+        this.resourceObjectType = authzCheckRequest.getResourceObjectType();
+        this.resourceObjectId = authzCheckRequest.getResourceObjectId();
+        this.permission = authzCheckRequest.getRelation();
+        this.subjectObjectType = authzCheckRequest.getSubjectObjectType();
+        this.subjectObjectId = authzCheckRequest.getSubjectObjectId();
     }
 
     public void setOptionalRelation(String optionalRelation) {
@@ -59,7 +57,11 @@ public class PermissionCheckRequest implements SpiceDbRequest {
         this.withTracing = withTracing;
     }
 
-    @Override
+    public void setContext(HashMap<String, Object> context) {
+
+        this.context = context;
+    }
+
     public JSONObject parseToJSON() {
 
         JSONObject jsonObject = new JSONObject();
@@ -75,12 +77,11 @@ public class PermissionCheckRequest implements SpiceDbRequest {
         subjectObject.put("objectType", this.subjectObjectType);
         subjectObject.put("objectId", this.subjectObjectId);
         subject.put("object", subjectObject);
-        subject.put("optionalRelation", optionalRelation);
+        subject.put("optionalRelation", this.optionalRelation);
         jsonObject.put("subject", subject);
 
         jsonObject.put("context", this.context);
         jsonObject.put("withTracing", withTracing);
         return jsonObject;
     }
-
 }
