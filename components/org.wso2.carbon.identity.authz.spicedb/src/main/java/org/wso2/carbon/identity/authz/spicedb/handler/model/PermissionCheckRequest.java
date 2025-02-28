@@ -40,11 +40,11 @@ public class PermissionCheckRequest  {
 
     public PermissionCheckRequest(AuthzCheckRequest authzCheckRequest) {
 
-        this.resourceObjectType = authzCheckRequest.getResourceObjectType();
-        this.resourceObjectId = authzCheckRequest.getResourceObjectId();
-        this.permission = authzCheckRequest.getRelation();
-        this.subjectObjectType = authzCheckRequest.getSubjectObjectType();
-        this.subjectObjectId = authzCheckRequest.getSubjectObjectId();
+        this.resourceObjectType = authzCheckRequest.getResource().getResourceObjectType();
+        this.resourceObjectId = authzCheckRequest.getResource().getResourceObjectId();
+        this.permission = authzCheckRequest.getActionObject().getAction();
+        this.subjectObjectType = authzCheckRequest.getSubject().getSubjectType();
+        this.subjectObjectId = authzCheckRequest.getSubject().getSubjectId();
     }
 
     public void setOptionalRelation(String optionalRelation) {

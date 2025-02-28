@@ -20,12 +20,11 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wso2.carbon.identity.authz.spicedb.handler.util.SpiceDbResponse;
 
 /**
  * This class is a model class to receive Error responses from SpiceDB.
  */
-public class SpiceDbErrorResponse implements SpiceDbResponse {
+public class SpiceDbErrorResponse {
 
     private String code;
     private String message;

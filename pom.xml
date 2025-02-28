@@ -57,7 +57,7 @@
         <org.apache.http.client.version.range>[4.3.1.wso2v2,5.0.0)</org.apache.http.client.version.range>
         <org.apache.http.impl.client.version.range>[4.3.1.wso2v2,5.0.0)</org.apache.http.impl.client.version.range>
         <org.apache.http.message.version.range>[4.3.3, 5.0.0)</org.apache.http.message.version.range>
-        <org.wso2.carbon.identity.inbound.auth.oauth2.version>7.0.137</org.wso2.carbon.identity.inbound.auth.oauth2.version>
+        <org.wso2.carbon.identity.inbound.auth.oauth2.version>7.0.245</org.wso2.carbon.identity.inbound.auth.oauth2.version>
         <org.wso2.carbon.identity.inbound.auth.oauth2.version.range>[7.0.136, 8.0.0)</org.wso2.carbon.identity.inbound.auth.oauth2.version.range>
 
         <maven.bundle.plugin.version>3.2.0</maven.bundle.plugin.version>
