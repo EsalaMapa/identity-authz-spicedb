@@ -24,7 +24,7 @@ import org.wso2.carbon.identity.oauth2.fga.models.ListObjectsRequest;
 import java.util.HashMap;
 
 /**
- *
+ * The {@code LookupSubjectsRequest} class represents the request body of a lookup subjects request sent to SpiceDB.
  */
 public class LookupSubjectsRequest {
 

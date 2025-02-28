@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * This class is a model class to receive permission bulk check responses from SpiceDB.
+ * The {@code PermissionBulkCheckResponse} class represents the response object for the bulk permission check request.
  */
 public class PermissionBulkCheckResponse {
 
@@ -66,6 +66,11 @@ public class PermissionBulkCheckResponse {
         return this.results;
     }
 
+    /**
+     * Converts the {@code PermissionBulkCheckResponse} object to an {@code AuthzBulkCheckResponse} object.
+     *
+     * @return An {@code AuthzBulkCheckResponse} object.
+     */
     public AuthzBulkCheckResponse toAuthzBulkCheckResponse() {
 
         HashMap<AuthzCheckRequest, AuthzCheckResponse> results = new HashMap<>();

@@ -46,13 +46,29 @@ import org.wso2.carbon.identity.oauth2.fga.services.FGAuthorizationInterface;
 import java.io.IOException;
 
 /**
- * This class contains methods that handle  all authorization related requests from SpiceDB.
+ * The {@code SpiceDbPermissionRequestsHandler} handles  sending all evaluation related requests to SpiceDB
+ * authorization engine.
+ * <p>
+ *     This class implements the {@link FGAuthorizationInterface} and provides the implementation for the
+ *     {@code checkAuthorization}, {@code bulkCheckAuthorization}, {@code lookUpResources} and {@code lookUpSubjects}
+ *     methods. This class uses the {@link SpiceDbHttpHandler} to send HTTP requests to the SpiceDB authorization
+ *     engine and parse the responses to generic response models.
+ * </p>
  */
 public class SpiceDbPermissionRequestsHandler implements FGAuthorizationInterface {
 
     private static final Log LOG = LogFactory.getLog(SpiceDbPermissionRequestsHandler.class);
     private static final SpiceDbHttpHandler SPICEDB_HTTP_HANDLER = new SpiceDbHttpHandler();
 
+
+    /**
+     * This method sends a permission check request to SpiceDB and returns the response as an
+     * {@link AuthzCheckResponse}.
+     *
+     * @param authzCheckRequest The request object containing the permission check details.
+     * @return The response object containing the authorization check result.
+     * @throws IdentityAuthzSpicedbException If an error occurs while sending the request or parsing the response.
+     */
     @Override
     public AuthzCheckResponse checkAuthorization(AuthzCheckRequest authzCheckRequest)
             throws IdentityAuthzSpicedbException {
@@ -84,6 +100,14 @@ public class SpiceDbPermissionRequestsHandler implements FGAuthorizationInterfac
         }
     }
 
+    /**
+     * This method sends a bulk permission check request to SpiceDB and returns the response as an
+     * {@link AuthzBulkCheckResponse}.
+     *
+     * @param authzBulkCheckRequest The request object containing the bulk permission check details.
+     * @return The response object containing the authorization bulk check result.
+     * @throws IdentityAuthzSpicedbException If an error occurs while sending the request or parsing the response.
+     */
     @Override
     public AuthzBulkCheckResponse bulkCheckAuthorization
             (AuthzBulkCheckRequest authzBulkCheckRequest) throws IdentityAuthzSpicedbException {
@@ -116,6 +140,14 @@ public class SpiceDbPermissionRequestsHandler implements FGAuthorizationInterfac
         }
     }
 
+    /**
+     * This method sends a request to look up resources in SpiceDB and returns the response as a
+     * {@link ListObjectsResponse}.
+     *
+     * @param listObjectsRequest The request object containing the resource details to look up.
+     * @return The response object containing the list of resources.
+     * @throws IdentityAuthzSpicedbException If an error occurs while sending the request or parsing the response.
+     */
     @Override
     public ListObjectsResponse lookUpResources(ListObjectsRequest listObjectsRequest)
             throws IdentityAuthzSpicedbException {
@@ -156,6 +188,14 @@ public class SpiceDbPermissionRequestsHandler implements FGAuthorizationInterfac
         }
     }
 
+    /**
+     * This method sends a request to look up subjects in SpiceDB and returns the response as a
+     * {@link ListObjectsResponse}.
+     *
+     * @param listObjectsRequest The request object containing the subject details to look up.
+     * @return The response object containing the list of subjects.
+     * @throws IdentityAuthzSpicedbException If an error occurs while sending the request or parsing the response.
+     */
     @Override
     public ListObjectsResponse lookUpSubjects(ListObjectsRequest listObjectsRequest)
             throws IdentityAuthzSpicedbException {

@@ -22,7 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * This class is a model class to receive Error responses from SpiceDB.
+ * The {@code SpiceDbErrorResponse} class represents the error response from the SpiceDB.
  */
 public class SpiceDbErrorResponse {
 

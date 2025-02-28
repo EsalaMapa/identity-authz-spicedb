@@ -21,7 +21,7 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 import org.json.JSONObject;
 
 /**
- *
+ * The {@code LookupResourcesObject} class represents the response object returned from a Lookup Resources Request.
  */
 public class LookupResourcesObject {
 

@@ -27,7 +27,7 @@ import org.wso2.carbon.identity.oauth2.fga.models.ListObjectsResult;
 import java.util.ArrayList;
 
 /**
- *
+ * The {@code LookupObjectsResponse} class represents the response of a lookup objects request sent to SpiceDB.
  */
 public class LookupObjectsResponse {
 
@@ -63,6 +63,11 @@ public class LookupObjectsResponse {
         return errorResults;
     }
 
+    /**
+     * Converts the response to a {@link ListObjectsResponse} object from a lookup resources response.
+     *
+     * @return The {@link ListObjectsResponse} object.
+     */
     public ListObjectsResponse resourcesToListObjectsResponse() {
 
         ArrayList<ListObjectsResult> listObjectsResults = new ArrayList<>();
@@ -76,6 +81,11 @@ public class LookupObjectsResponse {
         return new ListObjectsResponse(listObjectsResults, errorResponses);
     }
 
+    /**
+     * Converts the response to a {@link ListObjectsResponse} object from a lookup subjects response.
+     *
+     * @return The {@link ListObjectsResponse} object.
+     */
     public ListObjectsResponse subjectsToListObjectsResponse() {
 
         ArrayList<ListObjectsResult> listObjectsResults = new ArrayList<>();
@@ -89,6 +99,11 @@ public class LookupObjectsResponse {
         return new ListObjectsResponse(listObjectsResults, errorResponses);
     }
 
+    /**
+     * Converts error results from Lookup Objects requests to a list of {@link ErrorResponse} objects.
+     *
+     * @return A list of {@link ErrorResponse} objects.
+     */
     private ArrayList<ErrorResponse> addErrorResults () {
 
         ArrayList<ErrorResponse> errorResponses = new ArrayList<>();

@@ -24,7 +24,7 @@ import org.wso2.carbon.identity.oauth2.fga.models.AuthzCheckRequest;
 import java.util.ArrayList;
 
 /**
- * This class is a model class to create Permission bulk check requests to SpiceDB.
+ * The {@code PermissionBulkCheckRequest} class is a model class for the bulk permission check request body.
  */
 public class PermissionBulkCheckRequest {
 

@@ -22,7 +22,7 @@ import org.json.JSONObject;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbConstants;
 
 /**
- * This class is a model class to receive permission check responses from SpiceDB.
+ * The {@code PermissionCheckResponse} class represents a response from a permission check request sent to SpiceDB.
  */
 public class PermissionCheckResponse {
 

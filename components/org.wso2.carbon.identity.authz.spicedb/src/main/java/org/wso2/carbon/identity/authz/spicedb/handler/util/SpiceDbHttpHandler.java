@@ -36,10 +36,20 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 /**
- * This class is to create and send HTTP requests and receive responses.
+ * The {@code SpiceDbHttpHandler} class is responsible for handling HTTP requests.
+ *<P>
+ *     This class provides methods to send GET and POST requests to the SpiceDB server and uses the Apache HttpClient.
+ *</P>
  */
 public class SpiceDbHttpHandler {
 
+    /**
+     * Sends a GET request to the specified URL.
+     *
+     * @param url The URL to which the GET request should be sent.
+     * @return The HTTP response received from the server.
+     * @throws IOException If an I/O error occurs.
+     */
     public HttpResponse sendGETRequest(String url) throws IOException {
 
         HttpResponse response;
@@ -50,6 +60,14 @@ public class SpiceDbHttpHandler {
         return response;
     }
 
+    /**
+     * Sends a POST request to the specified URL with the given JSON object.
+     *
+     * @param url The URL to which the POST request should be sent.
+     * @param jsonObject The JSON object to be sent with the POST request.
+     * @return The HTTP response received from the server.
+     * @throws IOException If an I/O error occurs.
+     */
     public CloseableHttpResponse sendPOSTRequest(String url, JSONObject jsonObject) throws IOException {
 
         CloseableHttpResponse response;
@@ -62,6 +80,13 @@ public class SpiceDbHttpHandler {
         return response;
     }
 
+    /**
+     * Parses the content of the HTTP response to a string.
+     *
+     * @param response The HTTP response to be parsed.
+     * @return The content of the HTTP response as a string.
+     * @throws IOException If an I/O error occurs.
+     */
     public String parseToString(HttpResponse response) throws IOException {
 
         HttpEntity entity = response.getEntity();

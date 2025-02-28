@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
- * This class is a model class to create permission requests to SpiceDB.
+ * The {@code PermissionCheckRequest} class represents the request body of a permission check request sent to SpiceDB.
  */
 public class PermissionCheckRequest  {
 

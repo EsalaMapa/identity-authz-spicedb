@@ -21,7 +21,8 @@ package org.wso2.carbon.identity.authz.spicedb.handler.util;
 import org.wso2.carbon.identity.oauth2.fga.FGAuthorizationException;
 
 /**
- * This class is used to handle exceptions thrown by the SpiceDB authorization handler.
+ * The {@code IdentityAuthzSpicedbException} class is a custom exception class for the SpiceDB connector and extends
+ * the {@link FGAuthorizationException} class.
  */
 public class IdentityAuthzSpicedbException extends FGAuthorizationException {
 
