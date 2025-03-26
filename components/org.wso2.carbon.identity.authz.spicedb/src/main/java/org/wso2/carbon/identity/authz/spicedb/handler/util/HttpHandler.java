@@ -26,8 +26,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.json.JSONObject;
-import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbConstants;
+import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbApiConstants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,12 +35,12 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 /**
- * The {@code SpiceDbHttpHandler} class is responsible for handling HTTP requests.
+ * The {@code HttpHandler} class is responsible for handling HTTP requests.
  *<P>
  *     This class provides methods to send GET and POST requests to the SpiceDB server and uses the Apache HttpClient.
  *</P>
  */
-public class SpiceDbHttpHandler {
+public class HttpHandler {
 
     /**
      * Sends a GET request to the specified URL.
@@ -50,7 +49,7 @@ public class SpiceDbHttpHandler {
      * @return The HTTP response received from the server.
      * @throws IOException If an I/O error occurs.
      */
-    public HttpResponse sendGETRequest(String url) throws IOException {
+    public static HttpResponse sendGETRequest(String url) throws IOException {
 
         HttpResponse response;
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
@@ -64,18 +63,18 @@ public class SpiceDbHttpHandler {
      * Sends a POST request to the specified URL with the given JSON object.
      *
      * @param url The URL to which the POST request should be sent.
-     * @param jsonObject The JSON object to be sent with the POST request.
+     * @param requestBody The JSON object to be sent with the POST request.
      * @return The HTTP response received from the server.
      * @throws IOException If an I/O error occurs.
      */
-    public CloseableHttpResponse sendPOSTRequest(String url, JSONObject jsonObject) throws IOException {
+    public static CloseableHttpResponse sendPOSTRequest(String url, String requestBody) throws IOException {
 
         CloseableHttpResponse response;
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost(url);
         httpPost.setHeader("Content-Type", "application/json");
-        httpPost.setHeader("Authorization", SpiceDbConstants.PRE_SHARED_KEY);
-        httpPost.setEntity(new StringEntity(jsonObject.toString()));
+        httpPost.setHeader("Authorization", SpiceDbApiConstants.PRE_SHARED_KEY);
+        httpPost.setEntity(new StringEntity(requestBody));
         response = httpClient.execute(httpPost);
         return response;
     }
@@ -87,7 +86,7 @@ public class SpiceDbHttpHandler {
      * @return The content of the HTTP response as a string.
      * @throws IOException If an I/O error occurs.
      */
-    public String parseToString(HttpResponse response) throws IOException {
+    public static String parseResponseToString(HttpResponse response) throws IOException {
 
         HttpEntity entity = response.getEntity();
         InputStream stream = entity.getContent();

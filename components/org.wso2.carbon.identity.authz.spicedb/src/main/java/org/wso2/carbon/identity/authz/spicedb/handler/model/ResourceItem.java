@@ -21,32 +21,27 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
-import java.util.List;
-
 /**
- * The {@code SpiceDbErrorResponse} class represents an error response from SpiceDB.
+ * The {@code ResourceItem} class represents the resource object that is used in request bodies.
  */
-public class SpiceDbErrorResponse {
+public class ResourceItem {
 
-    @SerializedName(SpiceDbModelConstants.CODE)
-    private String code;
-    @SerializedName(SpiceDbModelConstants.MESSAGE)
-    private String message;
-    @SerializedName(SpiceDbModelConstants.DETAILS)
-    private List<String> details;
+    @SerializedName(SpiceDbModelConstants.OBJECT_TYPE)
+    private String resourceType;
+    @SerializedName(SpiceDbModelConstants.OBJECT_ID)
+    private String resourceId;
 
-    public String getMessage() {
+    public ResourceItem(String resourceType, String resourceId) {
 
-        return message;
+        this.resourceType = resourceType;
+        this.resourceId = resourceId;
     }
 
-    public List<String> getDetails() {
-
-        return details;
+    public String getResourceType() {
+        return resourceType;
     }
 
-    public String getCode() {
-
-        return code;
+    public String getResourceId() {
+        return resourceId;
     }
 }

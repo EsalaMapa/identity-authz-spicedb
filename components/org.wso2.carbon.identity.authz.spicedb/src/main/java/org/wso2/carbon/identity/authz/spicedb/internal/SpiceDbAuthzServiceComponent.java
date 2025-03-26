@@ -25,8 +25,8 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.wso2.carbon.identity.authz.spicedb.handler.spicedb.SpiceDbPermissionRequestsHandler;
-import org.wso2.carbon.identity.oauth2.fga.services.FGAuthorizationInterface;
+import org.wso2.carbon.identity.authorization.framework.service.AccessEvaluationService;
+import org.wso2.carbon.identity.authz.spicedb.handler.spicedb.SpicedbPermissionRequestService;
 
 /**
  * OSGi Component for the Spicedb Authorization Service.
@@ -48,9 +48,9 @@ public class SpiceDbAuthzServiceComponent {
     protected void activate (ComponentContext context) {
 
         try {
-            SpiceDbPermissionRequestsHandler spiceDbAuthorizationHandler = new SpiceDbPermissionRequestsHandler();
+            SpicedbPermissionRequestService spicedbPermissionRequestService = new SpicedbPermissionRequestService();
             BundleContext bundleContext = context.getBundleContext();
-            bundleContext.registerService(FGAuthorizationInterface.class, spiceDbAuthorizationHandler, null);
+            bundleContext.registerService(AccessEvaluationService.class, spicedbPermissionRequestService, null);
             LOG.debug("Application SpiceDB handler bundle is activated");
         } catch (Throwable throwable) {
             LOG.error("Error while starting spiceDB authorization component", throwable);

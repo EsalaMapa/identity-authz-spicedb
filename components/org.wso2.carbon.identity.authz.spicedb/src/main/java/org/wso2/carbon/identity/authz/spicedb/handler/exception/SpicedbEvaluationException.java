@@ -16,32 +16,35 @@
  * under the License.
  */
 
-package org.wso2.carbon.identity.authz.spicedb.handler.util;
+package org.wso2.carbon.identity.authz.spicedb.handler.exception;
 
-import org.wso2.carbon.identity.oauth2.fga.FGAuthorizationException;
+import org.wso2.carbon.identity.authorization.framework.exception.AccessEvaluationException;
 
 /**
- * The {@code IdentityAuthzSpicedbException} class is a custom exception class for the SpiceDB connector and extends
- * the {@link FGAuthorizationException} class.
+ * The {@code SpicedbEvaluationException} class is a custom exception class for the SpiceDB connector and extends
+ * the {@link AccessEvaluationException} class.
  */
-public class IdentityAuthzSpicedbException extends FGAuthorizationException {
+public class SpicedbEvaluationException extends AccessEvaluationException {
 
+    private static final long serialVersionUID = 9162001723200200001L;
     private String errorCode = null;
 
-    public IdentityAuthzSpicedbException (String message) {
+    public SpicedbEvaluationException(String message) {
         super(message);
     }
 
-    public IdentityAuthzSpicedbException (String errorCode, String message) {
+    public SpicedbEvaluationException(String errorCode, String message) {
+
         super(message);
         this.errorCode = errorCode;
     }
 
-    public IdentityAuthzSpicedbException (String message, Throwable cause) {
+    public SpicedbEvaluationException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public IdentityAuthzSpicedbException (String errorCode, String message, Throwable cause) {
+    public SpicedbEvaluationException(String errorCode, String message, Throwable cause) {
+
         super(message, cause);
         this.errorCode = errorCode;
     }
