@@ -18,16 +18,19 @@
 
 package org.wso2.carbon.identity.authz.spicedb.constants;
 
-import org.wso2.carbon.identity.oauth2.fga.core.FGAConstants;
+import org.wso2.carbon.identity.core.util.IdentityUtil;
 
 /**
- * The {@code SpiceDbConstants} class contains the constants used in the SpiceDB authorization engine.
+ * The {@code SpiceDbApiConstants} class contains the constants used in the SpiceDB authorization engine.
  */
-public class SpiceDbConstants {
+public class SpiceDbApiConstants {
+
+    //Authorization engine name.
+    public static final String AUTHORIZATION_ENGINE_NAME = "SpiceDB";
 
     //General api requirements.
-    public static final String BASE_URL = FGAConstants.FGA_ENGINE_BASE_URL;
-    public static final String PRE_SHARED_KEY = FGAConstants.FGA_ENGINE_PRE_SHARED_KEY;
+    public static final String BASE_URL = IdentityUtil.getProperty("FGAEngineConfig.BasePath");
+    public static final String PRE_SHARED_KEY = IdentityUtil.getProperty("FGAEngineConfig.Authentication.PreSharedKey");
 
     //Api endpoints.
     public static final String PERMISSION_CHECK = "v1/permissions/check";
@@ -46,15 +49,4 @@ public class SpiceDbConstants {
     public static final String SCHEMA_WRITE = "v1/schema/write";
 
     public static final String WATCH_SERVICE = "v1/watch";
-
-    //Permission response values.
-    public static final String HAS_PERMISSION = "PERMISSIONSHIP_HAS_PERMISSION";
-    public static final String NO_PERMISSION = "PERMISSIONSHIP_NO_PERMISSION";
-    public static final String CONDITIONAL_PERMISSION = "PERMISSIONSHIP_CONDITIONAL_PERMISSION";
-
-    //Api response codes
-    public static final int STATUS_OK = 200;
-    public static final int BAD_REQUEST = 400;
-    public static final int NETWORK_AUTHENTICATION_REQUIRED = 511;
-
 }
