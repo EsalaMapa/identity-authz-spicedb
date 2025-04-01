@@ -34,16 +34,16 @@ import java.util.Map;
 public class BulkCheckPermissionResponse {
 
     @SerializedName(SpiceDbModelConstants.BULK_CHECK_RESULTS)
-    private List<BulkCheckPermissionResponseItem> results;
+    private List<BulkCheckPermissionResult> results;
     @SerializedName(SpiceDbModelConstants.CHECKED_AT)
-    private CheckedAtToken token;
+    private ZedToken token;
 
     public String getToken() {
 
         return token.getToken();
     }
 
-    public List<BulkCheckPermissionResponseItem> getResults() {
+    public List<BulkCheckPermissionResult> getResults() {
 
         return this.results;
     }
@@ -57,7 +57,7 @@ public class BulkCheckPermissionResponse {
     public BulkAccessEvaluationResponse toBulkAccessEvalResponse() {
 
         ArrayList<AccessEvaluationResponse> results = new ArrayList<>();
-        for (BulkCheckPermissionResponseItem result : this.results) {
+        for (BulkCheckPermissionResult result : this.results) {
             if (result.isResultAvailable()) {
                 String permissionship = (String) result.getResult().get(SpiceDbModelConstants.PERMISSION_RESULT);
                 AccessEvaluationResponse accessEvaluationResponse = new AccessEvaluationResponse(
@@ -78,20 +78,5 @@ public class BulkCheckPermissionResponse {
             }
         }
         return new BulkAccessEvaluationResponse(results);
-    }
-
-    /**
-     * The {@code CheckedAtToken} class represents the token object that is used to keep consistency when checking
-     * permissions.
-     */
-    private static class CheckedAtToken {
-
-        @SerializedName(SpiceDbModelConstants.ZED_TOKEN)
-        private String token;
-
-        public String getToken() {
-
-            return token;
-        }
     }
 }

@@ -23,19 +23,19 @@ import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
 /**
- * The {@code SubjectItem} class represents the subject object that is used in a permission check request.
+ * The {@code Subject} class represents the subject object that is used in a permission check request.
  */
-public class SubjectItem {
+public class Subject {
 
     @SerializedName(SpiceDbModelConstants.OBJECT)
-    private SubjectObject subjectObject;
+    private SubjectDetails subjectObject;
     @SerializedName(SpiceDbModelConstants.OPTIONAL_RELATION)
     @Expose
     private String optionalRelation;
 
-    public SubjectItem(String subjectType, String subjectId) {
+    public Subject(String subjectType, String subjectId) {
 
-        this.subjectObject = new SubjectObject(subjectType, subjectId);
+        this.subjectObject = new SubjectDetails(subjectType, subjectId);
     }
 
     public void setOptionalRelation(String optionalRelation) {
@@ -45,33 +45,16 @@ public class SubjectItem {
 
     public String getSubjectType() {
 
-        return subjectObject.subjectType;
+        return subjectObject.getSubjectType();
     }
 
     public String getSubjectId() {
 
-        return subjectObject.subjectId;
+        return subjectObject.getSubjectId();
     }
 
     public String getOptionalRelation() {
 
         return optionalRelation;
-    }
-
-    /**
-     * The {@code SubjectObject} class represents the object inside the subject in a permission check request.
-     */
-    private static class SubjectObject {
-
-        @SerializedName(SpiceDbModelConstants.OBJECT_TYPE)
-        private String subjectType;
-        @SerializedName(SpiceDbModelConstants.OBJECT_ID)
-        private String subjectId;
-
-        public SubjectObject(String subjectType, String subjectId) {
-
-            this.subjectType = subjectType;
-            this.subjectId = subjectId;
-        }
     }
 }

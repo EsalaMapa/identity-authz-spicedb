@@ -24,13 +24,13 @@ import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 import java.util.Map;
 
 /**
- * The {@code BulkCheckPermissionResponseItem} class represents an individual response item from a bulk
+ * The {@code BulkCheckPermissionResult} class represents an individual response item from a bulk
  * permission check response. This contains the request that was sent with the result or an error if occurred.
  */
-public class BulkCheckPermissionResponseItem {
+public class BulkCheckPermissionResult {
 
     @SerializedName(SpiceDbModelConstants.REQUEST)
-    private Request sentRequest;
+    private ReturnedCheckRequest sentRequest;
     @SerializedName(SpiceDbModelConstants.RESULT_ITEM)
     private Map<String, Object> result;
     @SerializedName(SpiceDbModelConstants.ERROR)
@@ -39,32 +39,32 @@ public class BulkCheckPermissionResponseItem {
 
     public String getResourceId() {
 
-        return sentRequest.resourceItem.getResourceId();
+        return sentRequest.getResourceItem().getResourceId();
     }
 
     public String getResourceType() {
 
-        return sentRequest.resourceItem.getResourceType();
+        return sentRequest.getResourceItem().getResourceId();
     }
 
     public String getPermission() {
 
-        return sentRequest.permission;
+        return sentRequest.getPermission();
     }
 
     public String getSubjectId() {
 
-        return sentRequest.subjectItem.getSubjectId();
+        return sentRequest.getSubjectItem().getSubjectId();
     }
 
     public String getSubjectType() {
 
-        return sentRequest.subjectItem.getSubjectType();
+        return sentRequest.getSubjectItem().getSubjectType();
     }
 
     public Map<String, Object> getContext() {
 
-        return sentRequest.context;
+        return sentRequest.getContext();
     }
 
     public Map<String, Object> getResult() {
@@ -85,21 +85,5 @@ public class BulkCheckPermissionResponseItem {
 
         isResultAvailable = result != null;
         return isResultAvailable;
-    }
-
-    /**
-     * The {@code Request} class represents the  returned request object that was sent in the bulk permission check
-     * request.
-     */
-    private static class Request {
-
-        @SerializedName(SpiceDbModelConstants.RESOURCE)
-        private ResourceItem resourceItem;
-        @SerializedName(SpiceDbModelConstants.SUBJECT)
-        private SubjectItem subjectItem;
-        @SerializedName(SpiceDbModelConstants.PERMISSION)
-        private String permission;
-        @SerializedName(SpiceDbModelConstants.CONTEXT)
-        Map<String, Object> context;
     }
 }

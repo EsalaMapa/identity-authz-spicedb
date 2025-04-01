@@ -29,7 +29,7 @@ import java.util.Map;
 public class CheckPermissionResponse {
 
     @SerializedName(SpiceDbModelConstants.CHECKED_AT)
-    private CheckedAtToken token;
+    private ZedToken token;
     @SerializedName(SpiceDbModelConstants.PERMISSION_RESULT)
     private String permissionship;
     @SerializedName(SpiceDbModelConstants.PARTIAL_CAVEAT_INFO)
@@ -69,20 +69,5 @@ public class CheckPermissionResponse {
     public boolean isAuthorized() {
 
         return getPermissionship().equals(SpiceDbModelConstants.HAS_PERMISSION);
-    }
-
-    /**
-     * The {@code CheckedAtToken} class represents the token object that is used to keep consistency when checking
-     * permissions.
-     */
-    private static class CheckedAtToken {
-
-        @SerializedName(SpiceDbModelConstants.ZED_TOKEN)
-        private String token;
-
-        public String getToken() {
-            return token;
-        }
-
     }
 }

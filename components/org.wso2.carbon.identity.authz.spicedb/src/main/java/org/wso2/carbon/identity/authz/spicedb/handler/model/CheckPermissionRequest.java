@@ -33,11 +33,11 @@ import java.util.HashMap;
 public class CheckPermissionRequest {
 
     @SerializedName(SpiceDbModelConstants.RESOURCE)
-    private ResourceItem resourceItem;
+    private Resource resource;
     @SerializedName(SpiceDbModelConstants.PERMISSION)
     private String permission;
     @SerializedName(SpiceDbModelConstants.SUBJECT)
-    private SubjectItem subjectItem;
+    private Subject subject;
     @SerializedName(SpiceDbModelConstants.CONTEXT)
     @Expose
     private HashMap<String, Object> context;
@@ -47,10 +47,10 @@ public class CheckPermissionRequest {
 
     public CheckPermissionRequest(AccessEvaluationRequest accessEvaluationRequest) {
 
-        this.resourceItem = new ResourceItem(accessEvaluationRequest.getResource().getResourceType(),
+        this.resource = new Resource(accessEvaluationRequest.getResource().getResourceType(),
                 accessEvaluationRequest.getResource().getResourceId());
         this.permission = accessEvaluationRequest.getActionObject().getAction();
-        this.subjectItem = new SubjectItem(accessEvaluationRequest.getSubject().getSubjectType(),
+        this.subject = new Subject(accessEvaluationRequest.getSubject().getSubjectType(),
                 accessEvaluationRequest.getSubject().getSubjectId());
         if (accessEvaluationRequest.getContext() != null) {
             if (accessEvaluationRequest.getContext().containsKey(SpiceDbModelConstants.CONTEXT)) {
