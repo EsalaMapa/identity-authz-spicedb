@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationRequest;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
@@ -36,20 +34,12 @@ public class BulkCheckPermissionRequest {
 
     public BulkCheckPermissionRequest(ArrayList<AccessEvaluationRequest> items) {
 
+        if (items == null || items.isEmpty()) {
+            throw new IllegalArgumentException("Invalid request. The list of requests cannot be null or empty.");
+        }
         this.items = new ArrayList<>();
         for (AccessEvaluationRequest item : items) {
             this.items.add(new CheckPermissionRequest(item));
         }
-    }
-
-    /**
-     * Converts the {@code BulkCheckPermissionRequest} object to a JSON string.
-     *
-     * @return A JSON string.
-     */
-    public String parseToJsonString() {
-
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        return gson.toJson(this, BulkCheckPermissionRequest.class);
     }
 }

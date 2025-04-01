@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.spicedb;
 
-import com.google.gson.Gson;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationRequest;
@@ -34,6 +33,7 @@ import org.wso2.carbon.identity.authz.spicedb.handler.model.CheckPermissionReque
 import org.wso2.carbon.identity.authz.spicedb.handler.model.CheckPermissionResponse;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.SpiceDbErrorResponse;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.HttpHandler;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.JsonUtil;
 
 import java.io.IOException;
 
@@ -47,8 +47,6 @@ import java.io.IOException;
  * </p>
  */
 public class SpicedbPermissionRequestService implements AccessEvaluationService {
-
-    private final Gson gson = new Gson();
 
     /**
      * This method returns the name of the authorization engine.
@@ -73,14 +71,18 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
     public AccessEvaluationResponse evaluate(AccessEvaluationRequest accessEvaluationRequest)
             throws SpicedbEvaluationException {
 
+        if (accessEvaluationRequest == null) {
+            throw new SpicedbEvaluationException("Invalid request. Access evaluation request cannot be null.");
+        }
         CheckPermissionRequest checkPermissionRequest = new CheckPermissionRequest(accessEvaluationRequest);
-        try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(SpiceDbApiConstants.BASE_URL +
-                SpiceDbApiConstants.PERMISSION_CHECK, checkPermissionRequest.parseToJsonString())) {
+        try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(
+                HttpHandler.createRequestUrl(SpiceDbApiConstants.PERMISSION_CHECK),
+                JsonUtil.parseToJsonString(checkPermissionRequest))) {
             int statusCode = response.getStatusLine().getStatusCode();
+            String responseString = HttpHandler.parseResponseToString(response);
             if (statusCode == HttpStatus.SC_OK) {
-                CheckPermissionResponse checkPermissionResponse = gson.fromJson(
-                        HttpHandler.parseResponseToString(response),
-                        CheckPermissionResponse.class);
+                CheckPermissionResponse checkPermissionResponse = JsonUtil.jsonToResponseModel(
+                        responseString, CheckPermissionResponse.class);
                 AccessEvaluationResponse accessEvaluationResponse = new AccessEvaluationResponse(
                         checkPermissionResponse.isAuthorized());
                 if (checkPermissionResponse.getPartialCaveatInfo() != null) {
@@ -89,8 +91,8 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
                 return accessEvaluationResponse;
             } else if (HttpStatus.SC_BAD_REQUEST <= statusCode &&
                     statusCode <= HttpStatus.SC_INSUFFICIENT_STORAGE) {
-                SpiceDbErrorResponse error = gson.fromJson(HttpHandler.parseResponseToString(response),
-                        SpiceDbErrorResponse.class);
+                SpiceDbErrorResponse error = JsonUtil.jsonToResponseModel(
+                        responseString, SpiceDbErrorResponse.class);
                 throw new SpicedbEvaluationException(error.getCode(), error.getMessage());
             } else {
                 throw new SpicedbEvaluationException("Authorization check from spiceDB failed. " +
@@ -99,8 +101,6 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
         } catch (IOException e) {
             throw new SpicedbEvaluationException("Could not connect to SpiceDB to check authorization.",
                     e.getMessage());
-        } catch (Exception e) {
-            throw new SpicedbEvaluationException("Authorization check from spiceDB failed.", e.getMessage());
         }
     }
 
@@ -116,20 +116,24 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
     public BulkAccessEvaluationResponse bulkEvaluate
     (BulkAccessEvaluationRequest bulkAccessEvaluationRequest) throws SpicedbEvaluationException {
 
+        if (bulkAccessEvaluationRequest == null) {
+            throw new SpicedbEvaluationException("Invalid request. Bulk access evaluation request cannot be null.");
+        }
         BulkCheckPermissionRequest bulkCheckPermissionRequest =
                 new BulkCheckPermissionRequest(bulkAccessEvaluationRequest.getRequestItems());
-        try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(SpiceDbApiConstants.BASE_URL +
-                SpiceDbApiConstants.PERMISSIONS_BULKCHECK, bulkCheckPermissionRequest.parseToJsonString())) {
+        try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(
+                HttpHandler.createRequestUrl(SpiceDbApiConstants.PERMISSIONS_BULKCHECK),
+                JsonUtil.parseToJsonString(bulkCheckPermissionRequest))) {
             int statusCode = response.getStatusLine().getStatusCode();
+            String responseString = HttpHandler.parseResponseToString(response);
             if (statusCode == HttpStatus.SC_OK) {
-                BulkCheckPermissionResponse bulkCheckPermissionResponse = gson.fromJson(
-                        HttpHandler.parseResponseToString(response),
-                        BulkCheckPermissionResponse.class);
+                BulkCheckPermissionResponse bulkCheckPermissionResponse = JsonUtil.jsonToResponseModel(
+                        responseString, BulkCheckPermissionResponse.class);
                 return bulkCheckPermissionResponse.toBulkAccessEvalResponse();
             } else if (HttpStatus.SC_BAD_REQUEST <= statusCode &&
                     statusCode <= HttpStatus.SC_INSUFFICIENT_STORAGE) {
-                SpiceDbErrorResponse error = gson.fromJson(HttpHandler.parseResponseToString(response),
-                        SpiceDbErrorResponse.class);
+                SpiceDbErrorResponse error = JsonUtil.jsonToResponseModel(
+                        responseString, SpiceDbErrorResponse.class);
                 throw new SpicedbEvaluationException(error.getCode(), error.getMessage());
             } else {
                 throw new SpicedbEvaluationException("Authorization bulk check from spiceDB failed. " +
@@ -138,8 +142,6 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
         } catch (IOException e) {
             throw new SpicedbEvaluationException("Could not connect to SpiceDB to bulk check authorization.",
                     e.getMessage());
-        } catch (Exception e) {
-            throw new SpicedbEvaluationException("Authorization bulk check from spiceDB failed.", e.getMessage());
         }
     }
 }

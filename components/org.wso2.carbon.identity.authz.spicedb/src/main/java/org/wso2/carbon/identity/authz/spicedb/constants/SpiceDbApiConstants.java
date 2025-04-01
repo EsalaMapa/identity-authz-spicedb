@@ -30,6 +30,8 @@ public class SpiceDbApiConstants {
 
     //General api requirements.
     public static final String BASE_URL = IdentityUtil.getProperty("FGAEngineConfig.BasePath");
+     //http request header values
+    public static final String CONTENT_TYPE = "application/json";
     public static final String PRE_SHARED_KEY = IdentityUtil.getProperty("FGAEngineConfig.Authentication.PreSharedKey");
 
     //Api endpoints.
