@@ -30,7 +30,7 @@
 
     <groupId>org.wso2.carbon.identity.authz.spicedb</groupId>
     <artifactId>identity-authz-spicedb</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>components/org.wso2.carbon.identity.authz.spicedb</module>
