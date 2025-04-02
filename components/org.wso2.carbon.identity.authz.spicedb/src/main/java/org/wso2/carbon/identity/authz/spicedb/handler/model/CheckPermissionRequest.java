@@ -18,12 +18,11 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationRequest;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
+import org.wso2.carbon.identity.authz.spicedb.handler.exception.SpicedbEvaluationException;
 
 import java.util.HashMap;
 
@@ -33,11 +32,11 @@ import java.util.HashMap;
 public class CheckPermissionRequest {
 
     @SerializedName(SpiceDbModelConstants.RESOURCE)
-    private ResourceItem resourceItem;
+    private Resource resource;
     @SerializedName(SpiceDbModelConstants.PERMISSION)
     private String permission;
     @SerializedName(SpiceDbModelConstants.SUBJECT)
-    private SubjectItem subjectItem;
+    private Subject subject;
     @SerializedName(SpiceDbModelConstants.CONTEXT)
     @Expose
     private HashMap<String, Object> context;
@@ -45,12 +44,18 @@ public class CheckPermissionRequest {
     @Expose
     private boolean withTracing;
 
-    public CheckPermissionRequest(AccessEvaluationRequest accessEvaluationRequest) {
+    public CheckPermissionRequest(AccessEvaluationRequest accessEvaluationRequest) throws IllegalArgumentException {
 
-        this.resourceItem = new ResourceItem(accessEvaluationRequest.getResource().getResourceType(),
+        if (accessEvaluationRequest.getResource() == null &&
+                accessEvaluationRequest.getActionObject() == null &&
+                accessEvaluationRequest.getSubject() == null) {
+            throw new IllegalArgumentException("Invalid request. Resource, action, and subject " +
+                    "must be provided for permission check.");
+        }
+        this.resource = new Resource(accessEvaluationRequest.getResource().getResourceType(),
                 accessEvaluationRequest.getResource().getResourceId());
         this.permission = accessEvaluationRequest.getActionObject().getAction();
-        this.subjectItem = new SubjectItem(accessEvaluationRequest.getSubject().getSubjectType(),
+        this.subject = new Subject(accessEvaluationRequest.getSubject().getSubjectType(),
                 accessEvaluationRequest.getSubject().getSubjectId());
         if (accessEvaluationRequest.getContext() != null) {
             if (accessEvaluationRequest.getContext().containsKey(SpiceDbModelConstants.CONTEXT)) {
@@ -73,16 +78,4 @@ public class CheckPermissionRequest {
 
         this.context = context;
     }
-
-    /**
-     * Converts the {@code CheckPermissionRequest} object to a JSON string.
-     *
-     * @return A JSON string.
-     */
-    public String parseToJsonString() {
-
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        return gson.toJson(this, CheckPermissionRequest.class);
-    }
-
 }

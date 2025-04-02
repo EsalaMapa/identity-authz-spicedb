@@ -22,26 +22,29 @@ import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
 /**
- * The {@code ResourceItem} class represents the resource object that is used in request bodies.
+ * The {@code SubjectDetails} class represents an object inside a {@link Subject} that used in requests and
+ * responses.
  */
-public class ResourceItem {
+public class SubjectDetails {
 
     @SerializedName(SpiceDbModelConstants.OBJECT_TYPE)
-    private String resourceType;
+    private String subjectType;
     @SerializedName(SpiceDbModelConstants.OBJECT_ID)
-    private String resourceId;
+    private String subjectId;
 
-    public ResourceItem(String resourceType, String resourceId) {
+    public SubjectDetails(String subjectType, String subjectId) {
 
-        this.resourceType = resourceType;
-        this.resourceId = resourceId;
+        this.subjectType = subjectType;
+        this.subjectId = subjectId;
     }
 
-    public String getResourceType() {
-        return resourceType;
+    public String getSubjectType() {
+
+        return subjectType;
     }
 
-    public String getResourceId() {
-        return resourceId;
+    public String getSubjectId() {
+
+        return subjectId;
     }
 }

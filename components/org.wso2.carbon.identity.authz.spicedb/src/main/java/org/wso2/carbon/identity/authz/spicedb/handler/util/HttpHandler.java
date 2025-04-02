@@ -19,6 +19,7 @@
 package org.wso2.carbon.identity.authz.spicedb.handler.util;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -72,11 +73,22 @@ public class HttpHandler {
         CloseableHttpResponse response;
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost(url);
-        httpPost.setHeader("Content-Type", "application/json");
-        httpPost.setHeader("Authorization", SpiceDbApiConstants.PRE_SHARED_KEY);
+        httpPost.setHeader(HttpHeaders.CONTENT_TYPE, SpiceDbApiConstants.CONTENT_TYPE);
+        httpPost.setHeader(HttpHeaders.AUTHORIZATION, SpiceDbApiConstants.PRE_SHARED_KEY);
         httpPost.setEntity(new StringEntity(requestBody));
         response = httpClient.execute(httpPost);
         return response;
+    }
+
+    /**
+     * Creates a request URL by appending the endpoint to the base URL.
+     *
+     * @param endpoint The endpoint to be appended to the base URL.
+     * @return The complete request URL.
+     */
+    public static String createRequestUrl(String endpoint) {
+
+        return SpiceDbApiConstants.BASE_URL + endpoint;
     }
 
     /**

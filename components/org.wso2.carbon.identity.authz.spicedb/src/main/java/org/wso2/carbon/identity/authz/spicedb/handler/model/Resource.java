@@ -19,27 +19,29 @@
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
 import com.google.gson.annotations.SerializedName;
-import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationRequest;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
-import java.util.ArrayList;
-
 /**
- * The {@code BulkCheckPermissionRequest} class is a model class for the bulk permission check request body.
+ * The {@code Resource} class represents the resource object that is used in request bodies.
  */
-public class BulkCheckPermissionRequest {
+public class Resource {
 
-    @SerializedName(SpiceDbModelConstants.BULK_CHECK_REQUESTS)
-    private ArrayList<CheckPermissionRequest> items;
+    @SerializedName(SpiceDbModelConstants.OBJECT_TYPE)
+    private String resourceType;
+    @SerializedName(SpiceDbModelConstants.OBJECT_ID)
+    private String resourceId;
 
-    public BulkCheckPermissionRequest(ArrayList<AccessEvaluationRequest> items) {
+    public Resource(String resourceType, String resourceId) {
 
-        if (items == null || items.isEmpty()) {
-            throw new IllegalArgumentException("Invalid request. The list of requests cannot be null or empty.");
-        }
-        this.items = new ArrayList<>();
-        for (AccessEvaluationRequest item : items) {
-            this.items.add(new CheckPermissionRequest(item));
-        }
+        this.resourceType = resourceType;
+        this.resourceId = resourceId;
+    }
+
+    public String getResourceType() {
+        return resourceType;
+    }
+
+    public String getResourceId() {
+        return resourceId;
     }
 }

@@ -50,6 +50,12 @@ public class SpiceDbModelConstants {
     public static final String ERROR = "error";
     public static final String WITH_TRACING = "withTracing";
 
+    // Subject and Resource Object values.
+    public static final String OBJECT = "object";
+    public static final String OBJECT_TYPE = "objectType";
+    public static final String OBJECT_ID = "objectId";
+    public static final String OPTIONAL_RELATION = "optionalRelation";
+
     //Bulk check request and response values.
     public static final String BULK_CHECK_REQUESTS = "items";
     public static final String BULK_CHECK_RESULTS = "pairs";
