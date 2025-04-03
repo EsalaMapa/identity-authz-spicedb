@@ -36,6 +36,7 @@ import org.wso2.carbon.identity.authz.spicedb.handler.util.HttpHandler;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.JsonUtil;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 /**
  * The {@code SpicedbPermissionRequestService} handles sending all evaluation related requests to SpiceDB
@@ -76,7 +77,7 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
         }
         CheckPermissionRequest checkPermissionRequest = new CheckPermissionRequest(accessEvaluationRequest);
         try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(
-                HttpHandler.createRequestUrl(SpiceDbApiConstants.PERMISSION_CHECK),
+                SpiceDbApiConstants.PERMISSION_CHECK,
                 JsonUtil.parseToJsonString(checkPermissionRequest))) {
             int statusCode = response.getStatusLine().getStatusCode();
             String responseString = HttpHandler.parseResponseToString(response);
@@ -85,9 +86,7 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
                         responseString, CheckPermissionResponse.class);
                 AccessEvaluationResponse accessEvaluationResponse = new AccessEvaluationResponse(
                         checkPermissionResponse.isAuthorized());
-                if (checkPermissionResponse.getPartialCaveatInfo() != null) {
-                    accessEvaluationResponse.setContext(checkPermissionResponse.getPartialCaveatInfo());
-                }
+                accessEvaluationResponse.setContext(checkPermissionResponse.getPartialCaveatInfo());
                 return accessEvaluationResponse;
             } else if (HttpStatus.SC_BAD_REQUEST <= statusCode &&
                     statusCode <= HttpStatus.SC_INSUFFICIENT_STORAGE) {
@@ -101,6 +100,9 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
         } catch (IOException e) {
             throw new SpicedbEvaluationException("Could not connect to SpiceDB to check authorization.",
                     e.getMessage());
+        } catch (URISyntaxException ue) {
+            throw new SpicedbEvaluationException("URI error occurred while creating the request URL. Could not " +
+                    "connect to SpiceDB for check authorization", ue.getMessage());
         }
     }
 
@@ -122,7 +124,7 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
         BulkCheckPermissionRequest bulkCheckPermissionRequest =
                 new BulkCheckPermissionRequest(bulkAccessEvaluationRequest.getRequestItems());
         try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(
-                HttpHandler.createRequestUrl(SpiceDbApiConstants.PERMISSIONS_BULKCHECK),
+                SpiceDbApiConstants.PERMISSIONS_BULKCHECK,
                 JsonUtil.parseToJsonString(bulkCheckPermissionRequest))) {
             int statusCode = response.getStatusLine().getStatusCode();
             String responseString = HttpHandler.parseResponseToString(response);
@@ -142,6 +144,9 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
         } catch (IOException e) {
             throw new SpicedbEvaluationException("Could not connect to SpiceDB to bulk check authorization.",
                     e.getMessage());
+        } catch (URISyntaxException ue) {
+            throw new SpicedbEvaluationException("URI error occurred while creating the request URL. Could not " +
+                    "connect to SpiceDB for bulk check authorization", ue.getMessage());
         }
     }
 }

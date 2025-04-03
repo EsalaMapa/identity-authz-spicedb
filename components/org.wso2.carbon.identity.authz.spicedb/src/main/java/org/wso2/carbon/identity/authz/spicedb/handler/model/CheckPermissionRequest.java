@@ -22,8 +22,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationRequest;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
-import org.wso2.carbon.identity.authz.spicedb.handler.exception.SpicedbEvaluationException;
 
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -59,8 +59,13 @@ public class CheckPermissionRequest {
                 accessEvaluationRequest.getSubject().getSubjectId());
         if (accessEvaluationRequest.getContext() != null) {
             if (accessEvaluationRequest.getContext().containsKey(SpiceDbModelConstants.CONTEXT)) {
-                this.context = (HashMap<String, Object>) accessEvaluationRequest.getContext()
-                        .get(SpiceDbModelConstants.CONTEXT);
+                if (!(accessEvaluationRequest.getContext()
+                        .get(SpiceDbModelConstants.CONTEXT) instanceof HashMap)) {
+                    throw new IllegalArgumentException("Invalid request. Context must be a map.");
+                }
+                this.context = new HashMap<>();
+                this.context.putAll((HashMap<String, Object>) accessEvaluationRequest.getContext()
+                        .get(SpiceDbModelConstants.CONTEXT));
             }
             if (accessEvaluationRequest.getContext().containsKey(SpiceDbModelConstants.WITH_TRACING)) {
                 this.withTracing = (boolean) accessEvaluationRequest.getContext()
@@ -76,6 +81,32 @@ public class CheckPermissionRequest {
 
     public void setContext(HashMap<String, Object> context) {
 
-        this.context = context;
+        this.context = new HashMap<>();
+        this.context.putAll(context);
+    }
+
+    public Resource getResource() {
+
+        return resource;
+    }
+
+    public String getPermission() {
+
+        return permission;
+    }
+
+    public Subject getSubject() {
+
+        return new Subject(subject);
+    }
+
+    public HashMap<String, Object> getContext() {
+
+        return (HashMap<String, Object>) Collections.unmodifiableMap(context);
+    }
+
+    public boolean isWithTracing() {
+
+        return withTracing;
     }
 }

@@ -21,6 +21,7 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -49,12 +50,12 @@ public class CheckPermissionResponse {
 
     public Map<String, Object> getPartialCaveatInfo() {
 
-        return partialCaveatInfo;
+        return Collections.unmodifiableMap(this.partialCaveatInfo);
     }
 
     public Map<String, Object> getDebugTrace() {
 
-        return debugTrace;
+        return Collections.unmodifiableMap(this.debugTrace);
     }
 
     /**

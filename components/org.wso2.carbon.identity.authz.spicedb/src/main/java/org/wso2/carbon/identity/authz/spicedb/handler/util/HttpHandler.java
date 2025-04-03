@@ -24,6 +24,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -33,6 +34,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -46,15 +49,17 @@ public class HttpHandler {
     /**
      * Sends a GET request to the specified URL.
      *
-     * @param url The URL to which the GET request should be sent.
+     * @param endpoint The URL to which the GET request should be sent.
      * @return The HTTP response received from the server.
      * @throws IOException If an I/O error occurs.
      */
-    public static HttpResponse sendGETRequest(String url) throws IOException {
+    public static HttpResponse sendGETRequest(String endpoint) throws IOException, URISyntaxException {
 
         HttpResponse response;
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-            HttpGet httpGet = new HttpGet(url);
+            URI requestUrl = createRequestUrl(endpoint);
+            HttpGet httpGet = new HttpGet(requestUrl);
+            httpGet.setURI(requestUrl);
             response = httpClient.execute(httpGet);
         }
         return response;
@@ -63,16 +68,18 @@ public class HttpHandler {
     /**
      * Sends a POST request to the specified URL with the given JSON object.
      *
-     * @param url The URL to which the POST request should be sent.
+     * @param endpoint The URL to which the POST request should be sent.
      * @param requestBody The JSON object to be sent with the POST request.
      * @return The HTTP response received from the server.
      * @throws IOException If an I/O error occurs.
      */
-    public static CloseableHttpResponse sendPOSTRequest(String url, String requestBody) throws IOException {
+    public static CloseableHttpResponse sendPOSTRequest(String endpoint, String requestBody)
+            throws IOException, URISyntaxException {
 
         CloseableHttpResponse response;
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        HttpPost httpPost = new HttpPost(url);
+        URI requestUrl = createRequestUrl(endpoint);
+        HttpPost httpPost = new HttpPost(requestUrl);
         httpPost.setHeader(HttpHeaders.CONTENT_TYPE, SpiceDbApiConstants.CONTENT_TYPE);
         httpPost.setHeader(HttpHeaders.AUTHORIZATION, SpiceDbApiConstants.PRE_SHARED_KEY);
         httpPost.setEntity(new StringEntity(requestBody));
@@ -86,9 +93,10 @@ public class HttpHandler {
      * @param endpoint The endpoint to be appended to the base URL.
      * @return The complete request URL.
      */
-    public static String createRequestUrl(String endpoint) {
+    public static URI createRequestUrl(String endpoint) throws URISyntaxException {
 
-        return SpiceDbApiConstants.BASE_URL + endpoint;
+        URIBuilder uriBuilder = new URIBuilder(SpiceDbApiConstants.BASE_URL).setPath(endpoint);
+        return uriBuilder.build();
     }
 
     /**

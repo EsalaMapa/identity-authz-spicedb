@@ -24,6 +24,7 @@ import org.wso2.carbon.identity.authorization.framework.model.BulkAccessEvaluati
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class BulkCheckPermissionResponse {
 
     public List<BulkCheckPermissionResult> getResults() {
 
-        return this.results;
+        return Collections.unmodifiableList(this.results);
     }
 
     /**

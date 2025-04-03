@@ -38,6 +38,13 @@ public class Subject {
         this.subjectObject = new SubjectDetails(subjectType, subjectId);
     }
 
+    public Subject(Subject other) {
+
+        this.subjectObject = new SubjectDetails(other.subjectObject.getSubjectType(),
+                other.subjectObject.getSubjectId());
+        this.optionalRelation = other.optionalRelation;
+    }
+
     public void setOptionalRelation(String optionalRelation) {
 
         this.optionalRelation = optionalRelation;
