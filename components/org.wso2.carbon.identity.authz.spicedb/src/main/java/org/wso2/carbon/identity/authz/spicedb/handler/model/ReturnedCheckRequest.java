@@ -21,6 +21,7 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -45,7 +46,7 @@ public class ReturnedCheckRequest {
 
     public Subject getSubjectItem() {
 
-        return subject;
+        return new Subject(subject);
     }
 
     public String getPermission() {
@@ -55,6 +56,6 @@ public class ReturnedCheckRequest {
 
     public Map<String, Object> getContext() {
 
-        return context;
+        return Collections.unmodifiableMap(context);
     }
 }

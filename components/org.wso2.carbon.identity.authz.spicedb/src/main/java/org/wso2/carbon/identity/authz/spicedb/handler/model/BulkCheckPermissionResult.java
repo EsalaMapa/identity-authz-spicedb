@@ -21,6 +21,7 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -70,9 +71,9 @@ public class BulkCheckPermissionResult {
     public Map<String, Object> getResult() {
 
         if (isResultAvailable()) {
-            return result;
+            return Collections.unmodifiableMap(this.result);
         } else {
-            return error;
+            return Collections.unmodifiableMap(this.error);
         }
     }
 

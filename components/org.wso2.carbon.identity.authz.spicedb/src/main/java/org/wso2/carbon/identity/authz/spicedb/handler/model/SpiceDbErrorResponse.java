@@ -21,6 +21,7 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,7 +43,7 @@ public class SpiceDbErrorResponse {
 
     public List<String> getDetails() {
 
-        return details;
+        return Collections.unmodifiableList(details);
     }
 
     public String getCode() {
