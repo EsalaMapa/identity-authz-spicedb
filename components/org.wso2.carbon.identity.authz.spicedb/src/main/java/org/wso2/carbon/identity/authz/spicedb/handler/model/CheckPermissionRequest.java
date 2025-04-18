@@ -25,6 +25,7 @@ import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The {@code CheckPermissionRequest} class represents the request body of a permission check request sent to SpiceDB.
@@ -32,10 +33,13 @@ import java.util.HashMap;
 public class CheckPermissionRequest {
 
     @SerializedName(SpiceDbModelConstants.RESOURCE)
+    @Expose
     private Resource resource;
     @SerializedName(SpiceDbModelConstants.PERMISSION)
+    @Expose
     private String permission;
     @SerializedName(SpiceDbModelConstants.SUBJECT)
+    @Expose
     private Subject subject;
     @SerializedName(SpiceDbModelConstants.CONTEXT)
     @Expose
@@ -100,9 +104,9 @@ public class CheckPermissionRequest {
         return new Subject(subject);
     }
 
-    public HashMap<String, Object> getContext() {
+    public Map<String, Object> getContext() {
 
-        return (HashMap<String, Object>) Collections.unmodifiableMap(context);
+        return Collections.unmodifiableMap(context);
     }
 
     public boolean isWithTracing() {

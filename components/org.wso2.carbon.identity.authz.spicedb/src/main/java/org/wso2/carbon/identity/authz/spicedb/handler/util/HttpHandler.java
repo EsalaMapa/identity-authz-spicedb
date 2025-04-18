@@ -22,7 +22,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
@@ -45,25 +44,6 @@ import java.nio.charset.StandardCharsets;
  *</P>
  */
 public class HttpHandler {
-
-    /**
-     * Sends a GET request to the specified URL.
-     *
-     * @param endpoint The URL to which the GET request should be sent.
-     * @return The HTTP response received from the server.
-     * @throws IOException If an I/O error occurs.
-     */
-    public static HttpResponse sendGETRequest(String endpoint) throws IOException, URISyntaxException {
-
-        HttpResponse response;
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-            URI requestUrl = createRequestUrl(endpoint);
-            HttpGet httpGet = new HttpGet(requestUrl);
-            httpGet.setURI(requestUrl);
-            response = httpClient.execute(httpGet);
-        }
-        return response;
-    }
 
     /**
      * Sends a POST request to the specified URL with the given JSON object.

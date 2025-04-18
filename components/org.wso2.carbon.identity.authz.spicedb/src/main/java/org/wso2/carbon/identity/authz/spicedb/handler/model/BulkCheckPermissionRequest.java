@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationRequest;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 public class BulkCheckPermissionRequest {
 
     @SerializedName(SpiceDbModelConstants.BULK_CHECK_REQUESTS)
+    @Expose
     private ArrayList<CheckPermissionRequest> items;
 
     public BulkCheckPermissionRequest(ArrayList<AccessEvaluationRequest> items) {

@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationResponse;
 import org.wso2.carbon.identity.authorization.framework.model.BulkAccessEvaluationResponse;
@@ -35,8 +36,10 @@ import java.util.Map;
 public class BulkCheckPermissionResponse {
 
     @SerializedName(SpiceDbModelConstants.BULK_CHECK_RESULTS)
+    @Expose
     private List<BulkCheckPermissionResult> results;
     @SerializedName(SpiceDbModelConstants.CHECKED_AT)
+    @Expose
     private ZedToken token;
 
     public String getToken() {

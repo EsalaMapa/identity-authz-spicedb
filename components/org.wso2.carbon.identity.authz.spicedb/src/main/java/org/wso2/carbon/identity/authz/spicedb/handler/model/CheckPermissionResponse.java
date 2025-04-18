@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
@@ -30,12 +31,16 @@ import java.util.Map;
 public class CheckPermissionResponse {
 
     @SerializedName(SpiceDbModelConstants.CHECKED_AT)
+    @Expose
     private ZedToken token;
     @SerializedName(SpiceDbModelConstants.PERMISSION_RESULT)
+    @Expose
     private String permissionship;
     @SerializedName(SpiceDbModelConstants.PARTIAL_CAVEAT_INFO)
+    @Expose
     private Map<String, Object> partialCaveatInfo;
     @SerializedName(SpiceDbModelConstants.DEBUG_TRACE)
+    @Expose
     private Map<String, Object> debugTrace;
 
     public String getToken() {

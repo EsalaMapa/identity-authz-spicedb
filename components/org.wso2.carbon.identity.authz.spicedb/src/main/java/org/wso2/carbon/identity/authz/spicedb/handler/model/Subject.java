@@ -28,6 +28,7 @@ import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 public class Subject {
 
     @SerializedName(SpiceDbModelConstants.OBJECT)
+    @Expose
     private SubjectDetails subjectObject;
     @SerializedName(SpiceDbModelConstants.OPTIONAL_RELATION)
     @Expose
