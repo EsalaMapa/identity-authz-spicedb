@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
@@ -31,12 +32,16 @@ import java.util.Map;
 public class ReturnedCheckRequest {
 
     @SerializedName(SpiceDbModelConstants.RESOURCE)
+    @Expose
     private Resource resource;
     @SerializedName(SpiceDbModelConstants.SUBJECT)
+    @Expose
     private Subject subject;
     @SerializedName(SpiceDbModelConstants.PERMISSION)
+    @Expose
     private String permission;
     @SerializedName(SpiceDbModelConstants.CONTEXT)
+    @Expose
     private Map<String, Object> context;
 
     public Resource getResourceItem() {

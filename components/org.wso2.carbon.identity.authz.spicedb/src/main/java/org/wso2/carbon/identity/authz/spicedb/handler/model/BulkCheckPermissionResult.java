@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
@@ -31,10 +32,13 @@ import java.util.Map;
 public class BulkCheckPermissionResult {
 
     @SerializedName(SpiceDbModelConstants.REQUEST)
+    @Expose
     private ReturnedCheckRequest sentRequest;
     @SerializedName(SpiceDbModelConstants.RESULT_ITEM)
+    @Expose
     private Map<String, Object> result;
     @SerializedName(SpiceDbModelConstants.ERROR)
+    @Expose
     private Map<String, Object> error;
     private boolean isResultAvailable;
 

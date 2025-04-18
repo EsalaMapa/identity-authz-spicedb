@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
@@ -28,8 +29,10 @@ import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 public class SubjectDetails {
 
     @SerializedName(SpiceDbModelConstants.OBJECT_TYPE)
+    @Expose
     private String subjectType;
     @SerializedName(SpiceDbModelConstants.OBJECT_ID)
+    @Expose
     private String subjectId;
 
     public SubjectDetails(String subjectType, String subjectId) {

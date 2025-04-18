@@ -47,6 +47,7 @@ import org.wso2.carbon.identity.authz.spicedb.handler.util.JsonUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,8 +56,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 /**
@@ -93,7 +97,7 @@ public class SpicedbPermissionRequestServiceTest {
 
         service = null;
         accessEvaluationRequest = null;
-
+        bulkAccessEvaluationRequest = null;
     }
 
     @Test
@@ -120,9 +124,8 @@ public class SpicedbPermissionRequestServiceTest {
             // Mock HTTP response
             CloseableHttpResponse mockedResponse = mock(CloseableHttpResponse.class);
             StatusLine statusLine = mock(StatusLine.class);
-            Mockito.when(mockedResponse.getStatusLine()).thenReturn(statusLine);
-            Mockito.when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_OK);
-
+            when(mockedResponse.getStatusLine()).thenReturn(statusLine);
+            when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_OK);
             httpHandlerMock.when(() -> HttpHandler.sendPOSTRequest(
                             SpiceDbApiConstants.PERMISSION_CHECK, REQUEST_BODY))
                     .thenReturn(mockedResponse);
@@ -137,9 +140,9 @@ public class SpicedbPermissionRequestServiceTest {
 
             AccessEvaluationResponse result = service.evaluate(accessEvaluationRequest);
 
-            Assert.assertTrue(result.getDecision());
-            Assert.assertEquals(result.getContext().get("key"), "value");
-            Mockito.verify(mockedResponse).close();
+            assertTrue(result.getDecision());
+            assertEquals(result.getContext().get("key"), "value");
+            verify(mockedResponse).close();
         }
     }
 
@@ -156,8 +159,8 @@ public class SpicedbPermissionRequestServiceTest {
             // Mock HTTP response
             CloseableHttpResponse mockedResponse = mock(CloseableHttpResponse.class);
             StatusLine statusLine = mock(StatusLine.class);
-            Mockito.when(mockedResponse.getStatusLine()).thenReturn(statusLine);
-            Mockito.when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_BAD_REQUEST);
+            when(mockedResponse.getStatusLine()).thenReturn(statusLine);
+            when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_BAD_REQUEST);
 
             httpHandlerMock.when(() -> HttpHandler.sendPOSTRequest(
                             SpiceDbApiConstants.PERMISSION_CHECK, REQUEST_BODY))
@@ -192,8 +195,8 @@ public class SpicedbPermissionRequestServiceTest {
             // Mock HTTP response
             CloseableHttpResponse mockedResponse = mock(CloseableHttpResponse.class);
             StatusLine statusLine = mock(StatusLine.class);
-            Mockito.when(mockedResponse.getStatusLine()).thenReturn(statusLine);
-            Mockito.when(statusLine.getStatusCode()).thenReturn(0);
+            when(mockedResponse.getStatusLine()).thenReturn(statusLine);
+            when(statusLine.getStatusCode()).thenReturn(0);
 
             httpHandlerMock.when(() -> HttpHandler.sendPOSTRequest(
                             SpiceDbApiConstants.PERMISSION_CHECK, REQUEST_BODY))
@@ -203,14 +206,16 @@ public class SpicedbPermissionRequestServiceTest {
                 service.evaluate(accessEvaluationRequest);
                 fail(FAILURE_MESSAGE);
             } catch (SpicedbEvaluationException e) {
-                assertEquals(e.getMessage(), "Authorization check from spiceDB failed. Cannot identify error code.");
+                assertEquals(e.getMessage(), "Authorization check from spiceDB failed. " +
+                        "Cannot identify error code.");
             }
         }
     }
 
 
     @Test
-    public void testEvaluateIfCatchesIOException() {
+    public void testEvaluateForIOException() {
+
         try (MockedStatic<HttpHandler> httpHandlerMock = Mockito.mockStatic(HttpHandler.class);
              MockedStatic<JsonUtil> jsonUtilMock = Mockito.mockStatic(JsonUtil.class)) {
 
@@ -222,15 +227,16 @@ public class SpicedbPermissionRequestServiceTest {
 
             try {
                 service.evaluate(accessEvaluationRequest);
-                Assert.fail(FAILURE_MESSAGE);
+                fail(FAILURE_MESSAGE);
             } catch (SpicedbEvaluationException ex) {
-                Assert.assertEquals(ex.getMessage(), "Connection error");
+                assertEquals(ex.getMessage(), "Connection error");
             }
         }
     }
 
     @Test
-    public void testEvaluateIfCatchesURISyntaxException() {
+    public void testEvaluateForURISyntaxException() {
+
         try (MockedStatic<HttpHandler> httpHandlerMock = Mockito.mockStatic(HttpHandler.class);
              MockedStatic<JsonUtil> jsonUtilMock = Mockito.mockStatic(JsonUtil.class)) {
 
@@ -238,13 +244,13 @@ public class SpicedbPermissionRequestServiceTest {
                     .thenReturn(REQUEST_BODY);
 
             httpHandlerMock.when(() -> HttpHandler.sendPOSTRequest(any(), any()))
-                    .thenThrow(new IOException("URI error"));
+                    .thenThrow(new URISyntaxException("URI error", "URI error"));
 
             try {
                 service.evaluate(accessEvaluationRequest);
-                Assert.fail(FAILURE_MESSAGE);
+                fail(FAILURE_MESSAGE);
             } catch (SpicedbEvaluationException ex) {
-                Assert.assertEquals(ex.getMessage(), "URI error");
+                assertEquals(ex.getMessage(), "URI error: URI error");
             }
         }
     }
@@ -273,8 +279,8 @@ public class SpicedbPermissionRequestServiceTest {
             // Mock HTTP response
             CloseableHttpResponse mockedResponse = mock(CloseableHttpResponse.class);
             StatusLine statusLine = mock(StatusLine.class);
-            Mockito.when(mockedResponse.getStatusLine()).thenReturn(statusLine);
-            Mockito.when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_OK);
+            when(mockedResponse.getStatusLine()).thenReturn(statusLine);
+            when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_OK);
 
             httpHandlerMock.when(() -> HttpHandler.sendPOSTRequest(
                             SpiceDbApiConstants.PERMISSIONS_BULKCHECK, REQUEST_BODY))
@@ -294,8 +300,9 @@ public class SpicedbPermissionRequestServiceTest {
 
             BulkAccessEvaluationResponse response = service.bulkEvaluate(bulkAccessEvaluationRequest);
 
-            Assert.assertNotNull(response);
-            Assert.assertEquals(response.getResults().size(), results.size());
+            assertNotNull(response);
+            assertEquals(response.getResults().size(), results.size());
+            verify(mockedResponse).close();
         }
     }
 
@@ -312,9 +319,8 @@ public class SpicedbPermissionRequestServiceTest {
             // Mock HTTP response
             CloseableHttpResponse mockedResponse = mock(CloseableHttpResponse.class);
             StatusLine statusLine = mock(StatusLine.class);
-            Mockito.when(mockedResponse.getStatusLine()).thenReturn(statusLine);
-            Mockito.when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_BAD_REQUEST);
-
+            when(mockedResponse.getStatusLine()).thenReturn(statusLine);
+            when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_BAD_REQUEST);
             httpHandlerMock.when(() -> HttpHandler.sendPOSTRequest(
                             SpiceDbApiConstants.PERMISSIONS_BULKCHECK, REQUEST_BODY))
                     .thenReturn(mockedResponse);
@@ -331,6 +337,78 @@ public class SpicedbPermissionRequestServiceTest {
             } catch (SpicedbEvaluationException e) {
                 assertEquals(e.getMessage(), ERROR_MESSAGE);
                 assertEquals(e.getErrorCode(), ERROR_CODE);
+            }
+        }
+    }
+
+    @Test
+    public void testBulkEvaluateForUnknownErrorResponse() {
+
+        try (MockedStatic<HttpHandler> httpHandlerMock = mockStatic(HttpHandler.class);
+             MockedStatic<JsonUtil> jsonUtilMock = mockStatic(JsonUtil.class)) {
+
+            // Mock JSON serialization of BulkCheckPermissionRequest
+            jsonUtilMock.when(() -> JsonUtil.parseToJsonString(any(BulkCheckPermissionRequest.class)))
+                    .thenReturn(REQUEST_BODY);
+
+            // Mock HTTP response
+            CloseableHttpResponse mockedResponse = mock(CloseableHttpResponse.class);
+            StatusLine statusLine = mock(StatusLine.class);
+            when(mockedResponse.getStatusLine()).thenReturn(statusLine);
+            when(statusLine.getStatusCode()).thenReturn(0);
+
+            httpHandlerMock.when(() -> HttpHandler.sendPOSTRequest(
+                            SpiceDbApiConstants.PERMISSIONS_BULKCHECK, REQUEST_BODY))
+                    .thenReturn(mockedResponse);
+
+            try {
+                service.bulkEvaluate(bulkAccessEvaluationRequest);
+                fail(FAILURE_MESSAGE);
+            } catch (SpicedbEvaluationException e) {
+                assertEquals(e.getMessage(), "Authorization bulk check from spiceDB failed." +
+                        " Cannot identify error code.");
+            }
+        }
+    }
+
+    @Test
+    public void testBulkEvaluateforIOException() {
+
+        try (MockedStatic<HttpHandler> httpHandlerMock = mockStatic(HttpHandler.class);
+             MockedStatic<JsonUtil> jsonUtilMock = mockStatic(JsonUtil.class)) {
+
+            jsonUtilMock.when(() -> JsonUtil.parseToJsonString(any(BulkCheckPermissionRequest.class)))
+                    .thenReturn(REQUEST_BODY);
+
+            httpHandlerMock.when(() -> HttpHandler.sendPOSTRequest(any(), any()))
+                    .thenThrow(new IOException("Connection error"));
+
+            try {
+                service.bulkEvaluate(bulkAccessEvaluationRequest);
+                fail(FAILURE_MESSAGE);
+            } catch (SpicedbEvaluationException ex) {
+                assertEquals(ex.getMessage(), "Connection error");
+            }
+        }
+    }
+
+    @Test
+    public void testBulkEvaluateforURISyntaxException() {
+
+        try (MockedStatic<HttpHandler> httpHandlerMock = mockStatic(HttpHandler.class);
+             MockedStatic<JsonUtil> jsonUtilMock = mockStatic(JsonUtil.class)) {
+
+            jsonUtilMock.when(() -> JsonUtil.parseToJsonString(any(BulkCheckPermissionRequest.class)))
+                    .thenReturn(REQUEST_BODY);
+
+            httpHandlerMock.when(() -> HttpHandler.sendPOSTRequest(any(), any()))
+                    .thenThrow(new URISyntaxException("URI error", "URI error"));
+
+            try {
+                service.bulkEvaluate(bulkAccessEvaluationRequest);
+                fail(FAILURE_MESSAGE);
+            } catch (SpicedbEvaluationException ex) {
+                assertEquals(ex.getMessage(), "URI error: URI error");
             }
         }
     }

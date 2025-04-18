@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
@@ -30,10 +31,13 @@ import java.util.List;
 public class SpiceDbErrorResponse {
 
     @SerializedName(SpiceDbModelConstants.CODE)
+    @Expose
     private String code;
     @SerializedName(SpiceDbModelConstants.MESSAGE)
+    @Expose
     private String message;
     @SerializedName(SpiceDbModelConstants.DETAILS)
+    @Expose
     private List<String> details;
 
     public String getMessage() {

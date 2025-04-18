@@ -18,22 +18,24 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
+import com.google.gson.Gson;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
- * The {@code ZedToken} class represents the token returned in responses from SpiceDB.
- * @see <a href="https://authzed.com/docs/spicedb/concepts/consistency#zedtokens">ZedToken</a>
+ * Unit test class for the {@link Resource} class.
  */
-public class ZedToken {
+@Test
+public class ResourceTest {
 
-    @SerializedName(SpiceDbModelConstants.ZED_TOKEN)
-    @Expose
-    private String token;
+    @Test
+    public void testClassCreationWithJson() {
 
-    public String getToken() {
+        String json = "{ \"objectType\": \"resource\", \"objectId\": \"12345\" }";
+        Resource resource = new Gson().fromJson(json, Resource.class);
 
-        return token;
+        Assert.assertNotNull(resource);
+        Assert.assertEquals(resource.getResourceType(), "resource");
+        Assert.assertEquals(resource.getResourceId(), "12345");
     }
 }
