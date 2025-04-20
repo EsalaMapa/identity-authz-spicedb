@@ -24,6 +24,12 @@ import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationRe
 import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationResponse;
 import org.wso2.carbon.identity.authorization.framework.model.BulkAccessEvaluationRequest;
 import org.wso2.carbon.identity.authorization.framework.model.BulkAccessEvaluationResponse;
+import org.wso2.carbon.identity.authorization.framework.model.SearchActionsRequest;
+import org.wso2.carbon.identity.authorization.framework.model.SearchActionsResponse;
+import org.wso2.carbon.identity.authorization.framework.model.SearchResourcesRequest;
+import org.wso2.carbon.identity.authorization.framework.model.SearchResourcesResponse;
+import org.wso2.carbon.identity.authorization.framework.model.SearchSubjectsRequest;
+import org.wso2.carbon.identity.authorization.framework.model.SearchSubjectsResponse;
 import org.wso2.carbon.identity.authorization.framework.service.AccessEvaluationService;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbApiConstants;
 import org.wso2.carbon.identity.authz.spicedb.handler.exception.SpicedbEvaluationException;
@@ -31,6 +37,11 @@ import org.wso2.carbon.identity.authz.spicedb.handler.model.BulkCheckPermissionR
 import org.wso2.carbon.identity.authz.spicedb.handler.model.BulkCheckPermissionResponse;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.CheckPermissionRequest;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.CheckPermissionResponse;
+import org.wso2.carbon.identity.authz.spicedb.handler.model.LookupObjectsResponseHolder;
+import org.wso2.carbon.identity.authz.spicedb.handler.model.LookupResourcesRequest;
+import org.wso2.carbon.identity.authz.spicedb.handler.model.LookupSubjectsRequest;
+import org.wso2.carbon.identity.authz.spicedb.handler.model.ReadRelationshipsRequest;
+import org.wso2.carbon.identity.authz.spicedb.handler.model.ReadRelationshipsResponse;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.SpiceDbErrorResponse;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.HttpHandler;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.JsonUtil;
@@ -149,4 +160,121 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
                     "connect to SpiceDB for bulk check authorization", ue.getMessage());
         }
     }
+
+    /**
+     * This method sends a request to look up resources in SpiceDB and returns the response as a
+     * {@link SearchResourcesResponse}.
+     *
+     * @param searchResourcesRequest The request object containing the resource details to look up.
+     * @return The response object containing the list of resources.
+     * @throws SpicedbEvaluationException If an error occurs while sending the request or parsing the response.
+     */
+
+    public SearchResourcesResponse searchResources(SearchResourcesRequest searchResourcesRequest)
+            throws SpicedbEvaluationException {
+
+        if (searchResourcesRequest == null) {
+            throw new SpicedbEvaluationException("Invalid request. Search resources request cannot be null.");
+        }
+        LookupResourcesRequest lookupResourcesRequest = new LookupResourcesRequest(searchResourcesRequest);
+        try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(SpiceDbApiConstants.LOOKUP_RESOURCES,
+                JsonUtil.parseToJsonString(lookupResourcesRequest))) {
+            String responseString = HttpHandler.parseResponseToString(response);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode == HttpStatus.SC_OK) {
+                LookupObjectsResponseHolder lookupObjectsResponseHolder = new LookupObjectsResponseHolder(
+                        responseString,
+                        searchResourcesRequest.getResource().getResourceType());
+                return lookupObjectsResponseHolder.toSearchResourcesResponse();
+            } else if (HttpStatus.SC_BAD_REQUEST <= statusCode &&
+                    statusCode <= HttpStatus.SC_INSUFFICIENT_STORAGE) {
+                SpiceDbErrorResponse error = JsonUtil.jsonToResponseModel(responseString, SpiceDbErrorResponse.class);
+                throw new SpicedbEvaluationException(error.getCode(), error.getMessage());
+            } else {
+                throw new SpicedbEvaluationException("Looking up resources from spiceDB failed. " +
+                        "Cannot identify error code.");
+            }
+        } catch (IOException e) {
+            throw new SpicedbEvaluationException("Could not connect to SpiceDB to Lookup Resources.",
+                    e.getMessage());
+        } catch (URISyntaxException ue) {
+            throw new SpicedbEvaluationException("URI error occurred while creating the request URL. Could not " +
+                    "connect to SpiceDB to look uo resources.", ue.getMessage());
+        }
+    }
+
+    /**
+     * This method sends a request to look up subjects in SpiceDB and returns the response as a
+     * {@link SearchSubjectsResponse}.
+     *
+     * @param searchSubjectsRequest The request object containing the subject details to look up.
+     * @return The response object containing the list of subjects.
+     * @throws SpicedbEvaluationException If an error occurs while sending the request or parsing the response.
+     */
+
+    public SearchSubjectsResponse searchSubjects(SearchSubjectsRequest searchSubjectsRequest)
+            throws SpicedbEvaluationException {
+
+        if (searchSubjectsRequest == null) {
+            throw new SpicedbEvaluationException("Invalid request. Search subjects request cannot be null.");
+        }
+        LookupSubjectsRequest lookupSubjectsRequest = new LookupSubjectsRequest(searchSubjectsRequest);
+        try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(SpiceDbApiConstants.LOOKUP_SUBJECTS,
+                JsonUtil.parseToJsonString(lookupSubjectsRequest))) {
+            String responseString = HttpHandler.parseResponseToString(response);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode == HttpStatus.SC_OK) {
+                LookupObjectsResponseHolder lookupObjectsResponseHolder = new LookupObjectsResponseHolder(
+                        responseString,
+                        searchSubjectsRequest.getSubject().getSubjectType());
+                return lookupObjectsResponseHolder.toSearchSubjectsResponse();
+            } else if (HttpStatus.SC_BAD_REQUEST <= statusCode &&
+                    statusCode <= HttpStatus.SC_INSUFFICIENT_STORAGE) {
+                SpiceDbErrorResponse error = JsonUtil.jsonToResponseModel(responseString, SpiceDbErrorResponse.class);
+                throw new SpicedbEvaluationException(error.getCode(), error.getMessage());
+            } else {
+                throw new SpicedbEvaluationException("Looking up subjects from spiceDB failed. " +
+                        "Cannot identify error code.");
+            }
+        } catch (IOException e) {
+            throw new SpicedbEvaluationException("Could not connect to SpiceDB to lookup subjects.",
+                    e.getMessage());
+        } catch (URISyntaxException ue) {
+            throw new SpicedbEvaluationException("URI error occurred while creating the request URL. Could not " +
+                    "connect to SpiceDB to look up subjects.", ue.getMessage());
+        }
+    }
+
+    @Override
+    public SearchActionsResponse searchActions(SearchActionsRequest searchActionsRequest)
+            throws SpicedbEvaluationException {
+
+        if (searchActionsRequest == null) {
+            throw new SpicedbEvaluationException("Invalid request. Search actions request cannot be null.");
+        }
+        ReadRelationshipsRequest readRelationshipsRequest = new ReadRelationshipsRequest(searchActionsRequest);
+        try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(SpiceDbApiConstants.RELATIONSHIPS_READ,
+                JsonUtil.parseToJsonString(readRelationshipsRequest))) {
+            String responseString = HttpHandler.parseResponseToString(response);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode == HttpStatus.SC_OK) {
+                ReadRelationshipsResponse readRelationshipsResponse = new ReadRelationshipsResponse(responseString);
+                return readRelationshipsResponse.toSearchActionsResponse();
+            } else if (HttpStatus.SC_BAD_REQUEST <= statusCode &&
+                    statusCode <= HttpStatus.SC_INSUFFICIENT_STORAGE) {
+                SpiceDbErrorResponse error = JsonUtil.jsonToResponseModel(responseString, SpiceDbErrorResponse.class);
+                throw new SpicedbEvaluationException(error.getCode(), error.getMessage());
+            } else {
+                throw new SpicedbEvaluationException("Reading relationships to search actions from spiceDB failed. " +
+                        "Cannot identify error code.");
+            }
+        } catch (IOException e) {
+            throw new SpicedbEvaluationException("Could not connect to SpiceDB to read relationships " +
+                    "for action search.", e.getMessage());
+        } catch (URISyntaxException ue) {
+            throw new SpicedbEvaluationException("URI error occurred while creating the request URL. Could not " +
+                    "connect to SpiceDB to read relationships for action search.", ue.getMessage());
+        }
+    }
+
 }

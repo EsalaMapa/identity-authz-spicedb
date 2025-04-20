@@ -64,4 +64,31 @@ public class SpiceDbModelConstants {
     public static final String CODE = "code";
     public static final String MESSAGE = "message";
     public static final String DETAILS = "details";
+
+    //Lookup request and response values
+    public static final String LOOKED_AT = "lookedAt";
+    public static final String RESOURCE_ID = "resourceId";
+    public static final String AFTER_RESULT_CURSOR = "afterResultCursor";
+    public static final String OPTIONAL_LIMIT = "optionalLimit";
+    public static final String OPTIONAL_SUBJECT_RELATION = "optionalSubjectRelation";
+    public static final String RESULT = "result";
+    public static final String RESOURCE_OBJECT_TYPE = "resourceObjectType";
+    public static final String OPTIONAL_CURSOR = "optionalCursor";
+    public static final String OPTIONAL_CONCRETE_LIMIT = "optionalConcreteLimit";
+    public static final String WILD_CARD_OPTION = "wildCardOption";
+    public static final String SUBJECT_ID = "subjectObjectId";
+    public static final String SUBJECT_OBJECT_TYPE = "subjectObjectType";
+
+    //Data read and update request and response values
+    public static final String READ_AT = "readAt";
+    public static final String RELATIONSHIP_FILTER = "relationshipFilter";
+    public static final String OPTIONAL_RESOURCE_ID_PREFIX = "optionalResourceIdPrefix";
+    public static final String SUBJECT_TYPE = "subjectType";
+    public static final String RELATIONSHIP = "relationship";
+    public static final String OPTIONAL_SUBJECT_ID = "optionalSubjectId";
+    public static final String RELATION = "relation";
+    public static final String OPTIONAL_CAVEAT = "optionalCaveat";
+    public static final String RESOURCE_TYPE = "resourceType";
+    public static final String OPTIONAL_RESOURCE_ID = "optionalResourceId";
+    public static final String OPTIONAL_SUBJECT_FILTER = "optionalSubjectFilter";
 }
