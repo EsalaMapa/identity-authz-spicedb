@@ -21,7 +21,6 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.wso2.carbon.identity.authorization.framework.model.SearchActionsRequest;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
 /**
@@ -66,27 +65,14 @@ public class ReadRelationshipsRequest {
 
     //This constructor is used in Search Actions flow. Read relationships flow is used as a workaround since SpiceDB
     //does not have an endpoint to search actions yet.
-    public ReadRelationshipsRequest(SearchActionsRequest searchActionsRequest) {
+    public ReadRelationshipsRequest(Resource resource, Subject subject) {
 
-        if (searchActionsRequest.getResource() == null ||
-                searchActionsRequest.getSubject() == null) {
-
-            throw new IllegalArgumentException("Invalid request. Resource and Subject must be provided " +
-                    "to search actions.");
-        }
-        if (searchActionsRequest.getResource().getResourceId() == null ||
-                searchActionsRequest.getSubject().getSubjectId() == null) {
-
-            throw new IllegalArgumentException("Invalid request. Resource Id and Subject Id must be provid" +
-                    "to search actions.");
-        }
-        this.relationshipFilter = new RelationshipFilter(searchActionsRequest.getResource().getResourceType());
-        this.relationshipFilter.setOptionalResourceId(searchActionsRequest.getResource().getResourceId());
-        OptionalSubjectFilter optionalSubjectFilter = new OptionalSubjectFilter(searchActionsRequest
-                .getSubject()
-                .getSubjectType());
-        optionalSubjectFilter.setOptionalSubjectId(searchActionsRequest.getSubject().getSubjectId());
+        this.relationshipFilter = new RelationshipFilter(resource.getResourceType());
+        this.relationshipFilter.setOptionalResourceId(resource.getResourceId());
+        OptionalSubjectFilter optionalSubjectFilter = new OptionalSubjectFilter(subject.getSubjectType());
+        optionalSubjectFilter.setOptionalSubjectId(subject.getSubjectId());
         this.relationshipFilter.setOptionalSubjectFilter(optionalSubjectFilter);
+
     }
 
     public void setOptionalLimit (Long optionalLimit) {

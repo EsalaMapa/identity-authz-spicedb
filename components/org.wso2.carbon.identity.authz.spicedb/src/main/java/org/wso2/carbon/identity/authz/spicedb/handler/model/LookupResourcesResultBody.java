@@ -33,7 +33,7 @@ public class LookupResourcesResultBody {
     @SerializedName(SpiceDbModelConstants.LOOKED_AT)
     @Expose
     private ZedToken lookedAt;
-    @SerializedName(SpiceDbModelConstants.RESOURCE_ID)
+    @SerializedName(SpiceDbModelConstants.RESOURCE_OBJECT_ID)
     @Expose
     private String resourceId;
     @SerializedName(SpiceDbModelConstants.PERMISSION_RESULT)
@@ -44,7 +44,7 @@ public class LookupResourcesResultBody {
     private Map<String, Object> partialCaveatInfo;
     @SerializedName(SpiceDbModelConstants.AFTER_RESULT_CURSOR)
     @Expose
-    private String afterResultCursor;
+    private Map<String, Object> afterResultCursor;
 
     public String lookedAt() {
 
@@ -66,7 +66,7 @@ public class LookupResourcesResultBody {
         return partialCaveatInfo;
     }
 
-    public String getAfterResultCursor() {
+    public Map<String, Object> getAfterResultCursor() {
 
         return afterResultCursor;
     }

@@ -55,6 +55,9 @@ public class LookupObjectsResponseHolder {
 
         ArrayList<AuthorizationResource> resourceArrayList = new ArrayList<>();
         for (String result : this.results) {
+            if (result.isEmpty()) {
+                continue;
+            }
             LookupResourcesResult lookUpResourcesResult = JsonUtil.jsonToResponseModel(result,
                     LookupResourcesResult.class);
             AuthorizationResource authorizationResource = new AuthorizationResource(this.resultType,
@@ -75,6 +78,9 @@ public class LookupObjectsResponseHolder {
 
         ArrayList<AuthorizationSubject> listObjectsResults = new ArrayList<>();
         for (String result : this.results) {
+            if (result.isEmpty()) {
+                continue;
+            }
             LookupSubjectsResult lookUpSubjectsResult = JsonUtil.jsonToResponseModel(result,
                     LookupSubjectsResult.class);
             AuthorizationSubject searchObjectsResult = new AuthorizationSubject(this.resultType,

@@ -66,8 +66,8 @@ public class SpiceDbModelConstants {
     public static final String DETAILS = "details";
 
     //Lookup request and response values
-    public static final String LOOKED_AT = "lookedAt";
-    public static final String RESOURCE_ID = "resourceId";
+    public static final String LOOKED_AT = "lookedUpAt";
+    public static final String RESOURCE_OBJECT_ID = "resourceObjectId";
     public static final String AFTER_RESULT_CURSOR = "afterResultCursor";
     public static final String OPTIONAL_LIMIT = "optionalLimit";
     public static final String OPTIONAL_SUBJECT_RELATION = "optionalSubjectRelation";

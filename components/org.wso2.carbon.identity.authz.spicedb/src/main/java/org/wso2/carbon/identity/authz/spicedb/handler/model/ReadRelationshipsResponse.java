@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
-import org.wso2.carbon.identity.authorization.framework.model.AuthorizationAction;
-import org.wso2.carbon.identity.authorization.framework.model.SearchActionsResponse;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.JsonUtil;
 
 import java.util.ArrayList;
@@ -27,11 +25,11 @@ import java.util.ArrayList;
 /**
  * The {@code ReadRelationshipsResponse} class represents the response of a read relationships request sent to SpiceDB.
  * The read results are returned as a stream of Json String objects. This class splits the stream and creates a list of
- * {@link ReadRelationshipsResult} objects.
+ * {@link ReadRelationshipsResultBody} objects.
  */
 public class ReadRelationshipsResponse {
 
-    public ArrayList<ReadRelationshipsResult> results;
+    private ArrayList<ReadRelationshipsResult> results;
 
     public ReadRelationshipsResponse(String response) {
 
@@ -57,7 +55,7 @@ public class ReadRelationshipsResponse {
 //    public ReadAuthzDataResponse toAuthzDataReadResponse() {
 //        ArrayList<ReadAuthzDataResult> authzDataReadResultObjects =
 //                new ArrayList<>();
-//        for (ReadRelationshipsResult readRelationshipsResult : results) {
+//        for (ReadRelationshipsResultBody readRelationshipsResult : results) {
 //            AuthorizationResource resourceObject = new AuthorizationResource(
 //                    readRelationshipsResult.getResourceType(),
 //                    readRelationshipsResult.getResourceId());
@@ -71,20 +69,4 @@ public class ReadRelationshipsResponse {
 //        }
 //        return new ReadAuthzDataResponse(authzDataReadResultObjects);
 //    }
-
-    /**
-     * Converts the response to a {@link SearchActionsResponse} object from a read relationships response. This is used
-     * as a workaround since SpiceDB does not have an endpoint to search actions yet.
-     *
-     * @return The {@code SearchActionsResponse} object.
-     */
-    public SearchActionsResponse toSearchActionsResponse() {
-
-        ArrayList<AuthorizationAction> actionArrayList = new ArrayList<>();
-        for (ReadRelationshipsResult readRelationshipsResult: results) {
-            AuthorizationAction authorizationAction = new AuthorizationAction(readRelationshipsResult.getRelation());
-            actionArrayList.add(authorizationAction);
-        }
-        return new SearchActionsResponse(actionArrayList);
-    }
 }

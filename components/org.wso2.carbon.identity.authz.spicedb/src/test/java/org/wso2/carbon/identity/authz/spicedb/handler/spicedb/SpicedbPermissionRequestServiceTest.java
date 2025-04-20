@@ -99,7 +99,6 @@ public class SpicedbPermissionRequestServiceTest {
         service = null;
         accessEvaluationRequest = null;
         bulkAccessEvaluationRequest = null;
-
     }
 
     @Test
@@ -128,7 +127,6 @@ public class SpicedbPermissionRequestServiceTest {
             StatusLine statusLine = mock(StatusLine.class);
             when(mockedResponse.getStatusLine()).thenReturn(statusLine);
             when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_OK);
-
             httpHandlerMock.when(() -> HttpHandler.sendPOSTRequest(
                             SpiceDbApiConstants.PERMISSION_CHECK, REQUEST_BODY))
                     .thenReturn(mockedResponse);
@@ -218,6 +216,7 @@ public class SpicedbPermissionRequestServiceTest {
 
     @Test
     public void testEvaluateForIOException() {
+
         try (MockedStatic<HttpHandler> httpHandlerMock = Mockito.mockStatic(HttpHandler.class);
              MockedStatic<JsonUtil> jsonUtilMock = Mockito.mockStatic(JsonUtil.class)) {
 
@@ -238,6 +237,7 @@ public class SpicedbPermissionRequestServiceTest {
 
     @Test
     public void testEvaluateForURISyntaxException() {
+
         try (MockedStatic<HttpHandler> httpHandlerMock = Mockito.mockStatic(HttpHandler.class);
              MockedStatic<JsonUtil> jsonUtilMock = Mockito.mockStatic(JsonUtil.class)) {
 
@@ -322,7 +322,6 @@ public class SpicedbPermissionRequestServiceTest {
             StatusLine statusLine = mock(StatusLine.class);
             when(mockedResponse.getStatusLine()).thenReturn(statusLine);
             when(statusLine.getStatusCode()).thenReturn(HttpStatus.SC_BAD_REQUEST);
-
             httpHandlerMock.when(() -> HttpHandler.sendPOSTRequest(
                             SpiceDbApiConstants.PERMISSIONS_BULKCHECK, REQUEST_BODY))
                     .thenReturn(mockedResponse);

@@ -26,12 +26,12 @@ import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 import java.util.Map;
 
 /**
- * The {@code ReadRelationshipsResult} class represents the result item of a read relationships response returned by
- * SpiceDB.
+ * The {@code ReadRelationshipsResultBody} class holds all the fields in a single element in a results stream in a
+ * read relationships response returned by SpiceDB.
  */
 @SuppressFBWarnings(value = "UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR",
-        justification = "Field is populated via Gson deserialization")
-public class ReadRelationshipsResult {
+        justification = "Fields are populated via Gson deserialization")
+public class ReadRelationshipsResultBody {
 
     @SerializedName(SpiceDbModelConstants.READ_AT)
     @Expose
@@ -41,7 +41,7 @@ public class ReadRelationshipsResult {
     private Relationship relationship;
     @SerializedName(SpiceDbModelConstants.AFTER_RESULT_CURSOR)
     @Expose
-    private String afterResultCursor;
+    private Map<String, Object> afterResultCursor;
 
     public String getReadAt () {
 
@@ -83,7 +83,7 @@ public class ReadRelationshipsResult {
         return relationship.optionalCaveat;
     }
 
-    public String getAfterResultCursor () {
+    public Map<String, Object> getAfterResultCursor() {
 
         return afterResultCursor;
     }

@@ -44,7 +44,7 @@ public class LookupSubjectsResultBody {
     private Map<String, Object> partialCaveatInfo;
     @SerializedName(SpiceDbModelConstants.AFTER_RESULT_CURSOR)
     @Expose
-    private String afterResultCursor;
+    private Map<String, Object> afterResultCursor;
 
     public String lookedAt() {
 
@@ -66,7 +66,7 @@ public class LookupSubjectsResultBody {
         return partialCaveatInfo;
     }
 
-    public String getAfterResultCursor() {
+    public Map<String, Object> getAfterResultCursor() {
 
         return afterResultCursor;
     }
