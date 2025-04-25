@@ -91,4 +91,20 @@ public class SpiceDbModelConstants {
     public static final String RESOURCE_TYPE = "resourceType";
     public static final String OPTIONAL_RESOURCE_ID = "optionalResourceId";
     public static final String OPTIONAL_SUBJECT_FILTER = "optionalSubjectFilter";
+
+    //Reflection API values
+    public static final String OPTIONAL_FILTERS = "optionalFilters";
+    public static final String OPTIONAL_DEFINITION_NAME_FILTER = "optionalDefinitionNameFilter";
+    public static final String OPTIONAL_RELATION_NAME_FILTER = "optionalRelationNameFilter";
+    public static final String OPTIONAL_CAVEAT_NAME_FILTER = "optionalCaveatNameFilter";
+    public static final String OPTIONAL_PERMISSION_NAME_FILTER = "optionalPermissionNameFilter";
+    public static final String DEFINITIONS = "definitions";
+    public static final String DEFINITION_NAME = "name";
+    public static final String DEFINITION_COMMENT = "comment";
+    public static final String DEFINITION_RELATIONS = "relations";
+    public static final String DEFINITION_PERMISSIONS = "permissions";
+    public static final String PERMISSION_NAME = "name";
+    public static final String PERMISSION_COMMENT = "comment";
+    public static final String PARENT_DEFINITION = "parentDefinitionType";
+    public static final String SUBJECT_TYPES = "subjectTypes";
 }

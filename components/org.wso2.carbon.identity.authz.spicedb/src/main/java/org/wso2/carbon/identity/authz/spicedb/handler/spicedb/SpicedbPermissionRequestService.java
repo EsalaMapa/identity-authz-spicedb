@@ -40,18 +40,18 @@ import org.wso2.carbon.identity.authz.spicedb.handler.model.CheckPermissionRespo
 import org.wso2.carbon.identity.authz.spicedb.handler.model.LookupObjectsResponseHolder;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.LookupResourcesRequest;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.LookupSubjectsRequest;
-import org.wso2.carbon.identity.authz.spicedb.handler.model.ReadRelationshipsRequest;
-import org.wso2.carbon.identity.authz.spicedb.handler.model.ReadRelationshipsResponse;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.SpiceDbErrorResponse;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.HttpHandler;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.JsonUtil;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.SearchActionsUtil;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 /**
  * The {@code SpicedbPermissionRequestService} handles sending all evaluation related requests to SpiceDB
- * authorization engine.
+ * authorization engine. <a href="https://www.postman.com/authzed/workspace/spicedb/overview">More info</a>.
  * <p>
  *     This class implements the {@link AccessEvaluationService} and provides the implementation for access evaluation
  *     using SpiceDB. This class uses the {@link HttpHandler} to send HTTP requests to the SpiceDB authorization
@@ -72,11 +72,10 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
     }
 
     /**
-     * This method sends a permission check request to SpiceDB and returns the response as an
-     * {@link AccessEvaluationResponse}.
+     * This method checks if the requested subject is authorized to perform the requested action on the resource.
      *
      * @param accessEvaluationRequest The request object containing the permission check details.
-     * @return The response object containing the authorization check result.
+     * @return {@link AccessEvaluationResponse} - The response object containing the authorization check result.
      * @throws SpicedbEvaluationException If an error occurs while sending the request or parsing the response.
      */
     @Override
@@ -118,11 +117,12 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
     }
 
     /**
-     * This method sends a bulk permission check request to SpiceDB and returns the response as an
-     * {@link BulkAccessEvaluationResponse}.
+     * This method performs a bulk check permission request which allows checking multiple permissions in a single
+     * request.
      *
      * @param bulkAccessEvaluationRequest The request object containing the bulk permission check details.
-     * @return The response object containing the authorization bulk check result.
+     * @return {@link BulkAccessEvaluationResponse} - The response object containing the authorization bulk check
+     * result.
      * @throws SpicedbEvaluationException If an error occurs while sending the request or parsing the response.
      */
     @Override
@@ -162,14 +162,14 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
     }
 
     /**
-     * This method sends a request to look up resources in SpiceDB and returns the response as a
-     * {@link SearchResourcesResponse}.
+     * This method returns the resources that the requested subject can perform the requested action on. This is done
+     * by sending a Lookup resource request to SpiceDB.
      *
      * @param searchResourcesRequest The request object containing the resource details to look up.
-     * @return The response object containing the list of resources.
+     * @return {@link SearchResourcesResponse} - The response object containing the list of resources.
      * @throws SpicedbEvaluationException If an error occurs while sending the request or parsing the response.
      */
-
+    @Override
     public SearchResourcesResponse searchResources(SearchResourcesRequest searchResourcesRequest)
             throws SpicedbEvaluationException {
 
@@ -204,14 +204,14 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
     }
 
     /**
-     * This method sends a request to look up subjects in SpiceDB and returns the response as a
-     * {@link SearchSubjectsResponse}.
+     * This method returns the subjects that can perform the requested action on the requested resource. This is done
+     * by sending a Lookup subject request to SpiceDB.
      *
      * @param searchSubjectsRequest The request object containing the subject details to look up.
-     * @return The response object containing the list of subjects.
+     * @return {@link SearchSubjectsResponse} - The response object containing the list of subjects.
      * @throws SpicedbEvaluationException If an error occurs while sending the request or parsing the response.
      */
-
+    @Override
     public SearchSubjectsResponse searchSubjects(SearchSubjectsRequest searchSubjectsRequest)
             throws SpicedbEvaluationException {
 
@@ -245,6 +245,17 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
         }
     }
 
+    /**
+     * This method returns the actions that can be performed on a resource by a subject. Since SpiceDB does not have
+     * a direct search Actions API yet(as of 2025 April), this method uses Read Relationships and Schema Reflection
+     * APIs to retrieve the actions.
+     *
+     * @param searchActionsRequest The request object containing the subject and resource details to search actions
+     *                             for.
+     * @return {@link SearchActionsResponse} containing the actions.
+     * @throws SpicedbEvaluationException If an error occurs while sending the request or parsing the response.
+     * @see AccessEvaluationService#searchActions
+     */
     @Override
     public SearchActionsResponse searchActions(SearchActionsRequest searchActionsRequest)
             throws SpicedbEvaluationException {
@@ -252,29 +263,8 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
         if (searchActionsRequest == null) {
             throw new SpicedbEvaluationException("Invalid request. Search actions request cannot be null.");
         }
-        ReadRelationshipsRequest readRelationshipsRequest = new ReadRelationshipsRequest(searchActionsRequest);
-        try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(SpiceDbApiConstants.RELATIONSHIPS_READ,
-                JsonUtil.parseToJsonString(readRelationshipsRequest))) {
-            String responseString = HttpHandler.parseResponseToString(response);
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode == HttpStatus.SC_OK) {
-                ReadRelationshipsResponse readRelationshipsResponse = new ReadRelationshipsResponse(responseString);
-                return readRelationshipsResponse.toSearchActionsResponse();
-            } else if (HttpStatus.SC_BAD_REQUEST <= statusCode &&
-                    statusCode <= HttpStatus.SC_INSUFFICIENT_STORAGE) {
-                SpiceDbErrorResponse error = JsonUtil.jsonToResponseModel(responseString, SpiceDbErrorResponse.class);
-                throw new SpicedbEvaluationException(error.getCode(), error.getMessage());
-            } else {
-                throw new SpicedbEvaluationException("Reading relationships to search actions from spiceDB failed. " +
-                        "Cannot identify error code.");
-            }
-        } catch (IOException e) {
-            throw new SpicedbEvaluationException("Could not connect to SpiceDB to read relationships " +
-                    "for action search.", e.getMessage());
-        } catch (URISyntaxException ue) {
-            throw new SpicedbEvaluationException("URI error occurred while creating the request URL. Could not " +
-                    "connect to SpiceDB to read relationships for action search.", ue.getMessage());
-        }
+        ArrayList<String> relations = SearchActionsUtil.getRelations(searchActionsRequest);
+        return SearchActionsUtil.getActionsFromRelations(relations,
+                searchActionsRequest.getResource().getResourceType());
     }
-
 }

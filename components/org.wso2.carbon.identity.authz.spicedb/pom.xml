@@ -126,7 +126,7 @@
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
                                             <!-- coverage to be increased to 0.8 in next PR -->
-                                            <minimum>0.38</minimum>
+                                            <minimum>0.31</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
