@@ -247,7 +247,7 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
 
     /**
      * This method returns the actions that can be performed on a resource by a subject. Since SpiceDB does not have
-     * a direct search Actions API yet(as of 2025 April), this method uses Read Relationships and Schema Reflection
+     * a direct search Actions API yet(as of 2025 April), this method uses Schema Reflection and bulk check
      * APIs to retrieve the actions.
      *
      * @param searchActionsRequest The request object containing the subject and resource details to search actions
@@ -263,8 +263,10 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
         if (searchActionsRequest == null) {
             throw new SpicedbEvaluationException("Invalid request. Search actions request cannot be null.");
         }
-        ArrayList<String> relations = SearchActionsUtil.getRelations(searchActionsRequest);
-        return SearchActionsUtil.getActionsFromRelations(relations,
-                searchActionsRequest.getResource().getResourceType());
+        ArrayList<String> allPermissions = SearchActionsUtil.getAllPermissions(searchActionsRequest
+                .getResource().getResourceType());
+
+        return SearchActionsUtil.getAuthorizedActions(allPermissions, searchActionsRequest.getSubject(),
+                searchActionsRequest.getResource());
     }
 }

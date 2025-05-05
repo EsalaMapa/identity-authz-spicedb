@@ -20,106 +20,48 @@ package org.wso2.carbon.identity.authz.spicedb.handler.util;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationRequest;
+import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationResponse;
 import org.wso2.carbon.identity.authorization.framework.model.AuthorizationAction;
-import org.wso2.carbon.identity.authorization.framework.model.SearchActionsRequest;
+import org.wso2.carbon.identity.authorization.framework.model.AuthorizationResource;
+import org.wso2.carbon.identity.authorization.framework.model.AuthorizationSubject;
+import org.wso2.carbon.identity.authorization.framework.model.BulkAccessEvaluationRequest;
+import org.wso2.carbon.identity.authorization.framework.model.BulkAccessEvaluationResponse;
 import org.wso2.carbon.identity.authorization.framework.model.SearchActionsResponse;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbApiConstants;
 import org.wso2.carbon.identity.authz.spicedb.handler.exception.SpicedbEvaluationException;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.Definition;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.OptionalSchemaFilter;
-import org.wso2.carbon.identity.authz.spicedb.handler.model.ReadRelationshipsRequest;
-import org.wso2.carbon.identity.authz.spicedb.handler.model.ReadRelationshipsResponse;
-import org.wso2.carbon.identity.authz.spicedb.handler.model.ReadRelationshipsResult;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.ReflectSchemaRequest;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.ReflectSchemaResponse;
-import org.wso2.carbon.identity.authz.spicedb.handler.model.Resource;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.SpiceDbErrorResponse;
-import org.wso2.carbon.identity.authz.spicedb.handler.model.Subject;
+import org.wso2.carbon.identity.authz.spicedb.handler.spicedb.SpicedbPermissionRequestService;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The {@code SearchActionsUtil} class provides utility methods for handling search actions requests since spiceDB does
- * not support search actions. This class uses Read Relationships endpoint and Schema Reflection endpoint to retrieve
+ * not support search actions. This class uses Schema Reflection endpoint and Bulk Check endpoint to retrieve
  * the action details from SpiceDB.
  */
 public class SearchActionsUtil {
 
     /**
-     * This method retrieves the list of relations that the requested subject has with the requested resource using
-     * the Read Relationships endpoint in SpiceDB.
-     *
-     * @param searchActionsRequest The request object containing the resource and subject details.
-     * @return A list of relations.
-     * @throws SpicedbEvaluationException If an error occurs while retrieving the relations.
-     */
-    public static ArrayList<String> getRelations(SearchActionsRequest searchActionsRequest)
-            throws SpicedbEvaluationException {
-
-        ReadRelationshipsRequest readRelationshipsRequest = createReadRelationshipsRequest(searchActionsRequest);
-        try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(SpiceDbApiConstants.RELATIONSHIPS_READ,
-                JsonUtil.parseToJsonString(readRelationshipsRequest))) {
-            String responseString = HttpHandler.parseResponseToString(response);
-            int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode == HttpStatus.SC_OK) {
-                return getListOfRelations(responseString);
-            } else if (HttpStatus.SC_BAD_REQUEST <= statusCode &&
-                    statusCode <= HttpStatus.SC_INSUFFICIENT_STORAGE) {
-                SpiceDbErrorResponse error = JsonUtil.jsonToResponseModel(responseString, SpiceDbErrorResponse.class);
-                throw new SpicedbEvaluationException(error.getCode(), error.getMessage());
-            } else {
-                throw new SpicedbEvaluationException("Reading relationships to search actions from spiceDB failed. " +
-                        "Cannot identify error code.");
-            }
-        } catch (IOException e) {
-            throw new SpicedbEvaluationException("Could not connect to SpiceDB to read relationships " +
-                    "for action search.", e.getMessage());
-        } catch (URISyntaxException ue) {
-            throw new SpicedbEvaluationException("URI error occurred while creating the request URL. Could not " +
-                    "connect to SpiceDB to read relationships for action search.", ue.getMessage());
-        }
-
-    }
-
-    /**
-     * This method retrieves the relations from the response object.
-     *
-     * @param responseString The response string from the Read Relationships endpoint.
-     * @return A list of relations.
-     */
-    private static ArrayList<String> getListOfRelations(String responseString) {
-
-        ReadRelationshipsResponse readRelationshipsResponse = new ReadRelationshipsResponse(responseString);
-        ArrayList<String> relations = new ArrayList<>();
-        for (ReadRelationshipsResult result : readRelationshipsResponse.getResults()) {
-            if (result == null ||
-                    result.getResultDetails().getRelation() == null) {
-                continue;
-            }
-            relations.add(result.getResultDetails().getRelation());
-        }
-        return relations;
-    }
-
-    /**
-     * This method retrieves the actions the subject can perform from the retrieved relations using the Reflect Schema
+     * This method retrieves all the permissions any subject can perform on the resource using the Reflect Schema
      * endpoint in SpiceDB.
      *
-     * @param relations The list of relations.
      * @param resourceType The type of the resource.
-     * @return {@link SearchActionsResponse} containing the list of actions.
+     * @return the list of permissions that the resource type has.
      * @throws SpicedbEvaluationException If an error occurs while retrieving the actions.
      */
-    public static SearchActionsResponse getActionsFromRelations(ArrayList<String> relations, String resourceType)
+    public static ArrayList<String> getAllPermissions(String resourceType)
             throws SpicedbEvaluationException {
 
-        if (relations.isEmpty()) {
-            return new SearchActionsResponse(new ArrayList<>());
-        }
         ReflectSchemaRequest reflectSchemaRequest =
-                getReflectSchemaRequest(relations, resourceType);
+                createReflectSchemaRequest(resourceType);
         try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(SpiceDbApiConstants.REFLECT_SCHEMA,
                 JsonUtil.parseToJsonString(reflectSchemaRequest))) {
             String responseString = HttpHandler.parseResponseToString(response);
@@ -131,89 +73,104 @@ public class SearchActionsUtil {
                 for (Definition definition : reflectSchemaResponse.getDefinitions()) {
                     actions.addAll(definition.getPermissionNames());
                 }
-                return new SearchActionsResponse(
-                        actionsToAuthorizationActions(actions));
+                return actions;
             } else if (HttpStatus.SC_BAD_REQUEST <= statusCode &&
                     statusCode <= HttpStatus.SC_INSUFFICIENT_STORAGE) {
                 SpiceDbErrorResponse error = JsonUtil.jsonToResponseModel(responseString, SpiceDbErrorResponse.class);
                 throw new SpicedbEvaluationException(error.getCode(), error.getMessage());
             } else {
-                throw new SpicedbEvaluationException("Looking up subjects from spiceDB failed. " +
-                        "Cannot identify error code.");
+                throw new SpicedbEvaluationException("Searching actions from spiceDB failed while reflecting the " +
+                        "schema. Cannot identify error code.");
             }
         } catch (IOException e) {
-            throw new SpicedbEvaluationException("Could not connect to SpiceDB to lookup subjects.",
+            throw new SpicedbEvaluationException("Could not connect to SpiceDB to reflect schema.",
                     e.getMessage());
         } catch (URISyntaxException ue) {
             throw new SpicedbEvaluationException("URI error occurred while creating the request URL. Could not " +
-                    "connect to SpiceDB to look up subjects.", ue.getMessage());
+                    "connect to SpiceDB to reflect schema.", ue.getMessage());
         }
     }
 
     /**
-     * This method creates a Read Relationships request object from the Search Actions request object.
+     * This method creates a Reflect Schema request object from resource type to get all the permissions that
+     * resource type has.
      *
-     * @param searchActionsRequest The Search Actions request object.
-     * @return A {@link ReadRelationshipsRequest} object.
-     */
-    private static ReadRelationshipsRequest createReadRelationshipsRequest(SearchActionsRequest searchActionsRequest) {
-
-        if (searchActionsRequest.getResource() == null ||
-                searchActionsRequest.getSubject() == null) {
-
-            throw new IllegalArgumentException("Invalid request. Resource and Subject must be provided " +
-                    "to search actions.");
-        }
-        if (searchActionsRequest.getResource().getResourceId() == null ||
-                searchActionsRequest.getSubject().getSubjectId() == null) {
-
-            throw new IllegalArgumentException("Invalid request. Resource Id and Subject Id must be provid" +
-                    "to search actions.");
-        }
-        Resource resource = new Resource(searchActionsRequest.getResource().getResourceType(),
-                searchActionsRequest.getResource().getResourceId());
-        Subject subject = new Subject(searchActionsRequest.getSubject().getSubjectType(),
-                searchActionsRequest.getSubject().getSubjectId());
-        return new ReadRelationshipsRequest(resource, subject);
-    }
-
-    /**
-     * This method creates a Reflect Schema request object from the list of relations and resource type.
-     *
-     * @param relations The list of relations.
      * @param resourceType The type of the resource.
      * @return A {@link ReflectSchemaRequest} object.
      */
-    private static ReflectSchemaRequest getReflectSchemaRequest(ArrayList<String> relations, String resourceType) {
+    private static ReflectSchemaRequest createReflectSchemaRequest(String resourceType) {
 
         ArrayList<OptionalSchemaFilter> optionalSchemaFilters = new ArrayList<>();
-        for (String relation : relations) {
-            OptionalSchemaFilter optionalSchemaFilter = new OptionalSchemaFilter();
-            optionalSchemaFilter.setOptionalRelationNameFilter(relation);
-            optionalSchemaFilter.setOptionalDefinitionNameFilter(resourceType);
-            optionalSchemaFilters.add(optionalSchemaFilter);
-        }
+        OptionalSchemaFilter optionalSchemaFilter = new OptionalSchemaFilter();
+        optionalSchemaFilter.setOptionalDefinitionNameFilter(resourceType);
+        optionalSchemaFilters.add(optionalSchemaFilter);
         return new ReflectSchemaRequest(optionalSchemaFilters);
     }
+
+    /**
+     * This method retrieves all the permissions that a subject can perform on a resource using the Bulk Check endpoint
+     * in SpiceDB and returns a {@code SearchActionsResponse} object.
+     *
+     * @param allPermissions The list of all permissions that the resource type has.
+     * @param subject        The subject to check.
+     * @param resource       The resource to check.
+     * @return A {@link SearchActionsResponse} object containing the actions that the subject can perform on the
+     * resource.
+     * @throws SpicedbEvaluationException If an error occurs while retrieving the actions.
+     */
+    public static SearchActionsResponse getAuthorizedActions(ArrayList<String> allPermissions,
+                                                             AuthorizationSubject subject,
+                                                             AuthorizationResource resource)
+            throws SpicedbEvaluationException {
+
+        ArrayList<AccessEvaluationRequest> requests = new ArrayList<>();
+        for (String permission: allPermissions) {
+            requests.add(createAccessEvaluationRequest(subject, permission, resource));
+        }
+        BulkAccessEvaluationRequest bulkAccessEvaluationRequest = new BulkAccessEvaluationRequest(requests);
+        SpicedbPermissionRequestService requestService = new SpicedbPermissionRequestService();
+        BulkAccessEvaluationResponse bulkAccessEvaluationResponse = requestService
+                .bulkEvaluate(bulkAccessEvaluationRequest);
+        return new SearchActionsResponse(createAuthorizationActions(bulkAccessEvaluationResponse.getResults(),
+                allPermissions));
+    }
+
 
     /**
      * This method converts a list of action strings to a list of {@link AuthorizationAction} objects to send back in
      * the response.
      *
-     * @param actions The list of action strings.
+     *
      * @return A list of {@link AuthorizationAction} objects.
      */
-    private static ArrayList<AuthorizationAction> actionsToAuthorizationActions(ArrayList<String> actions) {
+    private static ArrayList<AuthorizationAction> createAuthorizationActions(
+            List<AccessEvaluationResponse> responses, ArrayList<String> allPermissions) {
 
         ArrayList<AuthorizationAction> authorizationActions = new ArrayList<>();
-        if (actions == null || actions.isEmpty()) {
-            return authorizationActions;
-        }
-        for (String action : actions) {
-            AuthorizationAction authorizationAction = new AuthorizationAction(action);
-            authorizationActions.add(authorizationAction);
+        for (int i = 0; i < responses.size(); i++) {
+            if (responses.get(i).getDecision()) {
+                AuthorizationAction action = new AuthorizationAction(allPermissions.get(i));
+                authorizationActions.add(action);
+            }
         }
         return authorizationActions;
+    }
+
+    /**
+     * This method creates an {@link AccessEvaluationRequest} object from the subject, permission and resource
+     * to send in bulk check request.
+     *
+     * @param subject the subject to check.
+     * @param permission the permission to check.
+     * @param resource the resource to check.
+     * @return An {@link AccessEvaluationRequest} object.
+     */
+    private static AccessEvaluationRequest createAccessEvaluationRequest(AuthorizationSubject subject,
+                                                                         String permission,
+                                                                         AuthorizationResource resource) {
+
+        AuthorizationAction action = new AuthorizationAction(permission);
+        return new AccessEvaluationRequest(subject, action, resource);
     }
 
 }

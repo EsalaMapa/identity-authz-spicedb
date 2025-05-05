@@ -79,19 +79,6 @@ public class SpiceDbModelConstants {
     public static final String SUBJECT_ID = "subjectObjectId";
     public static final String SUBJECT_OBJECT_TYPE = "subjectObjectType";
 
-    //Data read and update request and response values
-    public static final String READ_AT = "readAt";
-    public static final String RELATIONSHIP_FILTER = "relationshipFilter";
-    public static final String OPTIONAL_RESOURCE_ID_PREFIX = "optionalResourceIdPrefix";
-    public static final String SUBJECT_TYPE = "subjectType";
-    public static final String RELATIONSHIP = "relationship";
-    public static final String OPTIONAL_SUBJECT_ID = "optionalSubjectId";
-    public static final String RELATION = "relation";
-    public static final String OPTIONAL_CAVEAT = "optionalCaveat";
-    public static final String RESOURCE_TYPE = "resourceType";
-    public static final String OPTIONAL_RESOURCE_ID = "optionalResourceId";
-    public static final String OPTIONAL_SUBJECT_FILTER = "optionalSubjectFilter";
-
     //Reflection API values
     public static final String OPTIONAL_FILTERS = "optionalFilters";
     public static final String OPTIONAL_DEFINITION_NAME_FILTER = "optionalDefinitionNameFilter";
