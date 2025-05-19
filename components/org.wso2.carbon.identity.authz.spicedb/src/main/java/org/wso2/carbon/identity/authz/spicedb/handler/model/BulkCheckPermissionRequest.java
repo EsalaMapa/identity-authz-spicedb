@@ -22,6 +22,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationRequest;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.AuthzenInteropRequestUtil;
 
 import java.util.ArrayList;
 
@@ -34,14 +35,15 @@ public class BulkCheckPermissionRequest {
     @Expose
     private ArrayList<CheckPermissionRequest> items;
 
-    public BulkCheckPermissionRequest(ArrayList<AccessEvaluationRequest> items) {
+    public BulkCheckPermissionRequest(ArrayList<AccessEvaluationRequest> items) throws Exception {
 
         if (items == null || items.isEmpty()) {
             throw new IllegalArgumentException("Invalid request. The list of requests cannot be null or empty.");
         }
         this.items = new ArrayList<>();
         for (AccessEvaluationRequest item : items) {
-            this.items.add(new CheckPermissionRequest(item));
+            AccessEvaluationRequest modifiedItem = AuthzenInteropRequestUtil.modifyRequest(item);
+            this.items.add(new CheckPermissionRequest(modifiedItem));
         }
     }
 }

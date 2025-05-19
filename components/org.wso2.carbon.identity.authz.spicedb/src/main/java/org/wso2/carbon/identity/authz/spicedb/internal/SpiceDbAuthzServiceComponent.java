@@ -25,8 +25,12 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.identity.authorization.framework.service.AccessEvaluationService;
 import org.wso2.carbon.identity.authz.spicedb.handler.spicedb.SpicedbPermissionRequestService;
+import org.wso2.carbon.user.core.service.RealmService;
 
 /**
  * OSGi Component for the Spicedb Authorization Service.
@@ -38,6 +42,7 @@ import org.wso2.carbon.identity.authz.spicedb.handler.spicedb.SpicedbPermissionR
 public class SpiceDbAuthzServiceComponent {
 
     private static final Log LOG = LogFactory.getLog(SpiceDbAuthzServiceComponent.class);
+    private static RealmService realmservice;
 
     /**
      * Method to activate the component.
@@ -66,5 +71,48 @@ public class SpiceDbAuthzServiceComponent {
     protected void deactivate (ComponentContext context) {
 
         LOG.debug("Application SpiceDB handler bundle is deactivated.");
+    }
+
+    public static RealmService getRealmservice() {
+        return realmservice;
+    }
+
+    /**
+     * @param realmservice
+     */
+    public static void setRealmservice(RealmService realmservice) {
+
+        SpiceDbAuthzServiceComponent.realmservice = realmservice;
+    }
+
+    /**
+     * sets realm service.
+     *
+     * @param realmService <code>RealmService</code>
+     */
+    @Reference(
+            name = "user.realmservice.default",
+            service = org.wso2.carbon.user.core.service.RealmService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetRealmService"
+    )
+    protected void setRealmService(RealmService realmService) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("DefaultUserRealm set in Entitlement bundle");
+        }
+        SpiceDbAuthzServiceComponent.realmservice = realmService;
+    }
+
+    /**
+     * un-sets realm service.
+     *
+     * @param realmService <code>RealmService</code>
+     */
+    protected void unsetRealmService(RealmService realmService) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("DefaultUserRealm unset in Entitlement bundle");
+        }
+        SpiceDbAuthzServiceComponent.realmservice = null;
     }
 }

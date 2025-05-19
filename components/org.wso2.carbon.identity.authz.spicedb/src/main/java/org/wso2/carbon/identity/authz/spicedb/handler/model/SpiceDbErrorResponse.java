@@ -38,16 +38,16 @@ public class SpiceDbErrorResponse {
     private String message;
     @SerializedName(SpiceDbModelConstants.DETAILS)
     @Expose
-    private List<String> details;
+    private List<Object> details;
 
     public String getMessage() {
 
         return message;
     }
 
-    public List<String> getDetails() {
+    public List<Object> getDetails() {
 
-        return Collections.unmodifiableList(details);
+        return details != null ? Collections.unmodifiableList(details) : null;
     }
 
     public String getCode() {

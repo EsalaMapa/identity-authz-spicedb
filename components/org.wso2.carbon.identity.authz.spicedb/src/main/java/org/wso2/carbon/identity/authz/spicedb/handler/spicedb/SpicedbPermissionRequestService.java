@@ -41,6 +41,7 @@ import org.wso2.carbon.identity.authz.spicedb.handler.model.LookupObjectsRespons
 import org.wso2.carbon.identity.authz.spicedb.handler.model.LookupResourcesRequest;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.LookupSubjectsRequest;
 import org.wso2.carbon.identity.authz.spicedb.handler.model.SpiceDbErrorResponse;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.AuthzenInteropRequestUtil;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.HttpHandler;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.JsonUtil;
 import org.wso2.carbon.identity.authz.spicedb.handler.util.SearchActionsUtil;
@@ -85,7 +86,13 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
         if (accessEvaluationRequest == null) {
             throw new SpicedbEvaluationException("Invalid request. Access evaluation request cannot be null.");
         }
-        CheckPermissionRequest checkPermissionRequest = new CheckPermissionRequest(accessEvaluationRequest);
+        AccessEvaluationRequest modifiedRequest;
+        try {
+            modifiedRequest = AuthzenInteropRequestUtil.modifyRequest(accessEvaluationRequest);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        CheckPermissionRequest checkPermissionRequest = new CheckPermissionRequest(modifiedRequest);
         try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(
                 SpiceDbApiConstants.PERMISSION_CHECK,
                 JsonUtil.parseToJsonString(checkPermissionRequest))) {
@@ -96,7 +103,9 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
                         responseString, CheckPermissionResponse.class);
                 AccessEvaluationResponse accessEvaluationResponse = new AccessEvaluationResponse(
                         checkPermissionResponse.isAuthorized());
-                accessEvaluationResponse.setContext(checkPermissionResponse.getPartialCaveatInfo());
+                if (checkPermissionResponse.getPartialCaveatInfo() != null) {
+                    accessEvaluationResponse.setContext(checkPermissionResponse.getPartialCaveatInfo());
+                }
                 return accessEvaluationResponse;
             } else if (HttpStatus.SC_BAD_REQUEST <= statusCode &&
                     statusCode <= HttpStatus.SC_INSUFFICIENT_STORAGE) {
@@ -132,8 +141,13 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
         if (bulkAccessEvaluationRequest == null) {
             throw new SpicedbEvaluationException("Invalid request. Bulk access evaluation request cannot be null.");
         }
-        BulkCheckPermissionRequest bulkCheckPermissionRequest =
-                new BulkCheckPermissionRequest(bulkAccessEvaluationRequest.getRequestItems());
+
+        BulkCheckPermissionRequest bulkCheckPermissionRequest;
+        try {
+            bulkCheckPermissionRequest = new BulkCheckPermissionRequest(bulkAccessEvaluationRequest.getRequestItems());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         try (CloseableHttpResponse response = HttpHandler.sendPOSTRequest(
                 SpiceDbApiConstants.PERMISSIONS_BULKCHECK,
                 JsonUtil.parseToJsonString(bulkCheckPermissionRequest))) {

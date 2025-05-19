@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 public class BulkCheckPermissionRequestTest {
 
     @Test
-    public void testConstructorWithNullItems() {
+    public void testConstructorWithNullItems() throws Exception {
 
         try {
             new BulkCheckPermissionRequest(null);
@@ -49,7 +49,7 @@ public class BulkCheckPermissionRequestTest {
     }
 
     @Test
-    public void testConstructorWithEmptyItems() {
+    public void testConstructorWithEmptyItems() throws Exception {
 
         try {
             new BulkCheckPermissionRequest(new ArrayList<>());
