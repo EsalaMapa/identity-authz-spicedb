@@ -92,6 +92,6 @@ public class SpiceDbModelConstants {
     public static final String DEFINITION_PERMISSIONS = "permissions";
     public static final String PERMISSION_NAME = "name";
     public static final String PERMISSION_COMMENT = "comment";
-    public static final String PARENT_DEFINITION = "parentDefinitionType";
+    public static final String PARENT_DEFINITION = "parentDefinitionName";
     public static final String SUBJECT_TYPES = "subjectTypes";
 }

@@ -37,7 +37,7 @@ public class Permission {
     private String permissionComment;
     @SerializedName(SpiceDbModelConstants.PARENT_DEFINITION)
     @Expose
-    private String parentDefinitionType;
+    private String parentDefinitionName;
     @SerializedName(SpiceDbModelConstants.SUBJECT_TYPES)
     @Expose
     private ArrayList<Object> subjectTypes;
@@ -52,9 +52,9 @@ public class Permission {
         return permissionComment;
     }
 
-    public String getParentDefinitionType() {
+    public String getParentDefinitionName() {
 
-        return parentDefinitionType;
+        return parentDefinitionName;
     }
 
     public ArrayList<Object> getSubjectTypes() {
