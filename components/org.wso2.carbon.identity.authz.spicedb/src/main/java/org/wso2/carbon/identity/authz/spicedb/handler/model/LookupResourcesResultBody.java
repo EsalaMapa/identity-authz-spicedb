@@ -22,6 +22,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -63,11 +64,11 @@ public class LookupResourcesResultBody {
 
     public Map<String, Object> getPartialCaveatInfo() {
 
-        return partialCaveatInfo;
+        return partialCaveatInfo != null ? Collections.unmodifiableMap(partialCaveatInfo) : null;
     }
 
     public Map<String, Object> getAfterResultCursor() {
 
-        return afterResultCursor;
+        return afterResultCursor != null ? Collections.unmodifiableMap(afterResultCursor) : null;
     }
 }

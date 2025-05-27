@@ -23,6 +23,8 @@ import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The {@code Definition} class represents a definition object returned in a reflection response. This definition
@@ -54,17 +56,17 @@ public class Definition {
         return definitionComment;
     }
 
-    public ArrayList<Object> getRelations() {
+    public List<Object> getRelations() {
 
-        return relations;
+        return relations != null ? Collections.unmodifiableList(relations) : null;
     }
 
-    public ArrayList<Permission> getPermissions() {
+    public List<Permission> getPermissions() {
 
-        return permissions;
+        return permissions != null ? Collections.unmodifiableList(permissions) : null;
     }
 
-    public ArrayList<String> getPermissionNames() {
+    public List<String> getPermissionNames() {
 
         permissionNames = new ArrayList<>();
         if (this.permissions != null) {
@@ -72,6 +74,6 @@ public class Definition {
                 permissionNames.add(permission.getPermissionName());
             }
         }
-        return permissionNames;
+        return Collections.unmodifiableList(permissionNames);
     }
 }

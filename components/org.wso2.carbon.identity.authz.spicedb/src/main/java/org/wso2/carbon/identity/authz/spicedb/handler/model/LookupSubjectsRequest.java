@@ -24,6 +24,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.wso2.carbon.identity.authorization.framework.model.SearchSubjectsRequest;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -77,7 +78,7 @@ public class LookupSubjectsRequest {
 
     public void setContext(Map<String, Object> context) {
 
-        this.context = context;
+        this.context = context != null ? new HashMap<>(context) : null;
     }
 
     public void setOptionalSubjectRelation (String optionalSubjectRelation) {

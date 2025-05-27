@@ -23,6 +23,7 @@ import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * The {@code Permission} class represents a permission object returned in a reflection response.
@@ -59,6 +60,6 @@ public class Permission {
 
     public ArrayList<Object> getSubjectTypes() {
 
-        return subjectTypes;
+        return subjectTypes != null ? (ArrayList<Object>) Collections.unmodifiableList(subjectTypes) : null;
     }
 }
