@@ -53,11 +53,12 @@ public class LookupResourcesRequestTest {
     }
 
     @Test
-    public void testConstructorWithNullItems() {
+    public void testConstructorWithNullResource() {
 
         try {
             LookupResourcesRequest lookupResourcesRequest = new LookupResourcesRequest(
-                    new SearchResourcesRequest(null, null, null));
+                    new SearchResourcesRequest(null, mock(AuthorizationAction.class),
+                            mock(AuthorizationSubject.class)));
         } catch (IllegalArgumentException e) {
             assertEquals(e.getMessage(), "Invalid request. Resource with type, action," +
                     " and subject must be provided to lookup resources.");
@@ -65,7 +66,33 @@ public class LookupResourcesRequestTest {
     }
 
     @Test
-    public void testConstructorWithNullResourceId() {
+    public void testConstructorWithNullAction() {
+
+        try {
+            LookupResourcesRequest lookupResourcesRequest = new LookupResourcesRequest(
+                    new SearchResourcesRequest(mock(AuthorizationResource.class), null,
+                            mock(AuthorizationSubject.class)));
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(), "Invalid request. Resource with type, action," +
+                    " and subject must be provided to lookup resources.");
+        }
+    }
+
+    @Test
+    public void testConstructorWithNullSubject() {
+
+        try {
+            LookupResourcesRequest lookupResourcesRequest = new LookupResourcesRequest(
+                    new SearchResourcesRequest(mock(AuthorizationResource.class), mock(AuthorizationAction.class),
+                            null));
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(), "Invalid request. Resource with type, action," +
+                    " and subject must be provided to lookup resources.");
+        }
+    }
+
+    @Test
+    public void testConstructorWithNullSubjectId() {
 
         try {
             LookupResourcesRequest lookupResourcesRequest = new LookupResourcesRequest(

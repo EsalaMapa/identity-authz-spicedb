@@ -24,6 +24,7 @@ import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * The {@code Permission} class represents a permission object returned in a reflection response.
@@ -58,8 +59,8 @@ public class Permission {
         return parentDefinitionName;
     }
 
-    public ArrayList<Object> getSubjectTypes() {
+    public List<Object> getSubjectTypes() {
 
-        return subjectTypes != null ? (ArrayList<Object>) Collections.unmodifiableList(subjectTypes) : null;
+        return subjectTypes != null ? Collections.unmodifiableList(subjectTypes) : null;
     }
 }

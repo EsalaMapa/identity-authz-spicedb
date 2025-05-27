@@ -49,9 +49,19 @@ public class CheckPermissionResponseTest {
         Assert.assertNotNull(checkPermissionResponse);
         Assert.assertNotNull(checkPermissionResponse.getToken());
         Assert.assertEquals(checkPermissionResponse.getToken(), "token2");
+        Assert.assertFalse(checkPermissionResponse.isAuthorized());
         Assert.assertNotNull(checkPermissionResponse.getPermissionship());
         Assert.assertEquals(checkPermissionResponse.getPermissionship(), "PERMISSIONSHIP_UNSPECIFIED");
         Assert.assertNotNull(checkPermissionResponse.getPartialCaveatInfo());
         Assert.assertNotNull(checkPermissionResponse.getDebugTrace());
+    }
+
+    @Test
+    public void testGetterWhenNull() {
+
+        CheckPermissionResponse checkPermissionResponse = new CheckPermissionResponse();
+        Assert.assertNull(checkPermissionResponse.getPermissionship());
+        Assert.assertNull(checkPermissionResponse.getPartialCaveatInfo());
+        Assert.assertNull(checkPermissionResponse.getDebugTrace());
     }
 }

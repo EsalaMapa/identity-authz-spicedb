@@ -53,11 +53,38 @@ public class LookupSubjectsRequestTest {
     }
 
     @Test
-    public void testConstructorWithNullRequest() {
+    public void testConstructorWithNullResource() {
 
         try {
             LookupSubjectsRequest lookupSubjectsRequest = new LookupSubjectsRequest(
-                    new SearchSubjectsRequest(null, null, null));
+                    new SearchSubjectsRequest(mock(AuthorizationSubject.class),
+                            mock(AuthorizationAction.class), null));
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(), "Invalid request. Resource, action, and subject with type" +
+                    " must be provided to lookup subjects.");
+        }
+    }
+
+    @Test
+    public void testConstructorWithNullAction() {
+
+        try {
+            LookupSubjectsRequest lookupSubjectsRequest = new LookupSubjectsRequest(
+                    new SearchSubjectsRequest(mock(AuthorizationSubject.class), null,
+                            mock(AuthorizationResource.class)));
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(), "Invalid request. Resource, action, and subject with type" +
+                    " must be provided to lookup subjects.");
+        }
+    }
+
+    @Test
+    public void testConstructorWithNullSubject() {
+
+        try {
+            LookupSubjectsRequest lookupSubjectsRequest = new LookupSubjectsRequest(
+                    new SearchSubjectsRequest(null, mock(AuthorizationAction.class),
+                            mock(AuthorizationResource.class)));
         } catch (IllegalArgumentException e) {
             assertEquals(e.getMessage(), "Invalid request. Resource, action, and subject with type" +
                     " must be provided to lookup subjects.");

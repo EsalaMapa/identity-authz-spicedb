@@ -21,6 +21,9 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 import com.google.gson.Gson;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -44,6 +47,18 @@ public class PermissionTest {
         assertEquals(permission.getPermissionName(), "permission");
         assertEquals(permission.getPermissionComment(), "comment");
         assertEquals(permission.getParentDefinitionName(), "definition");
+    }
+
+    @Test
+    public void testGetSubjectTypes() throws Exception {
+
+        Permission permission = new Permission();
+        Field subjectTypesField = permission.getClass().getDeclaredField("subjectTypes");
+        subjectTypesField.setAccessible(true);
+        subjectTypesField.set(permission, new ArrayList<>());
+
+        assertNotNull(permission.getSubjectTypes());
+        assertEquals(permission.getSubjectTypes().size(), 0);
     }
 
 }

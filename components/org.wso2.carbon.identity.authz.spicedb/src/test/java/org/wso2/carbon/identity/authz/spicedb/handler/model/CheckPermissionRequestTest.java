@@ -39,12 +39,63 @@ import static org.mockito.Mockito.when;
 public class CheckPermissionRequestTest {
 
     @Test
-    public void testConstructorWithNullRequest() {
+    public void testConstructorWithNullResource() {
 
         try {
-            new CheckPermissionRequest(new AccessEvaluationRequest(null, null, null));
+            new CheckPermissionRequest(new AccessEvaluationRequest(mock(AuthorizationSubject.class),
+                    mock(AuthorizationAction.class), null));
         } catch (IllegalArgumentException e) {
             assert e.getMessage().equals("Invalid request. Resource, action, and subject " +
+                    "must be provided for permission check.");
+        }
+    }
+
+    @Test
+    public void testConstructorWithNullAction() {
+
+        try {
+            new CheckPermissionRequest(new AccessEvaluationRequest(mock(AuthorizationSubject.class), null,
+                    mock(AuthorizationResource.class)));
+        } catch (IllegalArgumentException e) {
+            assert e.getMessage().equals("Invalid request. Resource, action, and subject " +
+                    "must be provided for permission check.");
+        }
+    }
+
+    @Test
+    public void testConstructorWithNullSubject() {
+
+        try {
+            new CheckPermissionRequest(new AccessEvaluationRequest(null, mock(AuthorizationAction.class),
+                    mock(AuthorizationResource.class)));
+        } catch (IllegalArgumentException e) {
+            assert e.getMessage().equals("Invalid request. Resource, action, and subject " +
+                    "must be provided for permission check.");
+        }
+    }
+
+    @Test
+    public void testConstructorWithNullResourceId() {
+
+        try {
+            new CheckPermissionRequest(new AccessEvaluationRequest(
+                    new AuthorizationSubject("type", "id"), mock(AuthorizationAction.class),
+                    mock(AuthorizationResource.class)));
+        } catch (IllegalArgumentException e) {
+            assert e.getMessage().equals("Invalid request. Resource Id and subject Id " +
+                    "must be provided for permission check.");
+        }
+    }
+
+    @Test
+    public void testConstructorWithNullSubjectId() {
+
+        try {
+            new CheckPermissionRequest(new AccessEvaluationRequest(
+                    mock(AuthorizationSubject.class), mock(AuthorizationAction.class),
+                    new AuthorizationResource("type", "id")));
+        } catch (IllegalArgumentException e) {
+            assert e.getMessage().equals("Invalid request. Resource Id and subject Id " +
                     "must be provided for permission check.");
         }
     }
