@@ -39,7 +39,7 @@ public class ReflectSchemaRequest {
 
     public ReflectSchemaRequest(ArrayList<OptionalSchemaFilter> schemaFilters) {
 
-        this.schemaFilters = schemaFilters;
+        this.schemaFilters = schemaFilters != null ? new ArrayList<>(schemaFilters) : null;
     }
 
 }

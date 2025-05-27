@@ -23,6 +23,8 @@ import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The {@code ReflectSchemaResponse} class represents a response object from the Reflect Schema API. This API is
@@ -35,9 +37,9 @@ public class ReflectSchemaResponse {
     @Expose
     private ArrayList<Definition> definitions;
 
-    public ArrayList<Definition> getDefinitions() {
+    public List<Definition> getDefinitions() {
 
-        return definitions;
+        return definitions != null ? Collections.unmodifiableList(definitions) : null;
     }
 
 }
