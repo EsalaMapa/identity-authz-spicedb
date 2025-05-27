@@ -24,6 +24,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.wso2.carbon.identity.authorization.framework.model.SearchResourcesRequest;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -71,7 +73,7 @@ public class LookupResourcesRequest {
 
     public void setContext(Map<String, Object> context) {
 
-        this.context = context;
+        this.context = context != null ? new HashMap<>(context) : null;
     }
 
     public void setOptionalRelation (String optionalRelation) {
@@ -91,6 +93,6 @@ public class LookupResourcesRequest {
 
     public Map<String, Object> getContext() {
 
-        return context;
+        return context != null ? Collections.unmodifiableMap(context) : null;
     }
 }

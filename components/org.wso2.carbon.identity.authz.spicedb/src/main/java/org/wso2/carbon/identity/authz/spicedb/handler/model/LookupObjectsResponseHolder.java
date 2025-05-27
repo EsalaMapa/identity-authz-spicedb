@@ -25,6 +25,7 @@ import org.wso2.carbon.identity.authorization.framework.model.SearchSubjectsResp
 import org.wso2.carbon.identity.authz.spicedb.handler.util.JsonUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * The {@code LookupObjectsResponseHolder} class holds the results stream returned from a Lookup subject or Lookup
@@ -43,7 +44,7 @@ public class LookupObjectsResponseHolder {
 
     public String[] getResults () {
 
-        return results;
+        return results != null ? Arrays.copyOf(results, results.length) : new String[0];
     }
 
     /**
