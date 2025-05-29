@@ -22,6 +22,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
+import java.util.Locale;
+
 /**
  * The {@code SubjectDetails} class represents an object inside a {@link Subject} that used in requests and
  * responses.
@@ -37,7 +39,8 @@ public class SubjectDetails {
 
     public SubjectDetails(String subjectType, String subjectId) {
 
-        this.subjectType = subjectType;
+        // Convert subject type to lower case since SpiceDB expects it to be in lower case.
+        this.subjectType = subjectType.toLowerCase(Locale.ROOT);
         this.subjectId = subjectId;
     }
 

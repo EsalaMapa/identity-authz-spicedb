@@ -23,6 +23,8 @@ import com.google.gson.annotations.SerializedName;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
+import java.util.Locale;
+
 /**
  * The {@code OptionalSchemaFilter} class represents an optional filter object in a reflection request.
  */
@@ -45,21 +47,22 @@ public class OptionalSchemaFilter {
 
     public void setOptionalDefinitionNameFilter(String optionalDefinitionNameFilter) {
 
-        this.optionalDefinitionNameFilter = optionalDefinitionNameFilter;
+        // Convert the filter to lower case since the SpiceDB schema does not allow upper case letters.
+        this.optionalDefinitionNameFilter = optionalDefinitionNameFilter.toLowerCase(Locale.ROOT);
     }
 
     public void setOptionalRelationNameFilter(String optionalRelationNameFilter) {
 
-        this.optionalRelationNameFilter = optionalRelationNameFilter;
+        this.optionalRelationNameFilter = optionalRelationNameFilter.toLowerCase(Locale.ROOT);
     }
 
     public void setOptionalCaveatNameFilter(String optionalCaveatNameFilter) {
 
-        this.optionalCaveatNameFilter = optionalCaveatNameFilter;
+        this.optionalCaveatNameFilter = optionalCaveatNameFilter.toLowerCase(Locale.ROOT);
     }
 
     public void setOptionalPermissionNameFilter(String optionalPermissionNameFilter) {
 
-        this.optionalPermissionNameFilter = optionalPermissionNameFilter;
+        this.optionalPermissionNameFilter = optionalPermissionNameFilter.toLowerCase(Locale.ROOT);
     }
 }

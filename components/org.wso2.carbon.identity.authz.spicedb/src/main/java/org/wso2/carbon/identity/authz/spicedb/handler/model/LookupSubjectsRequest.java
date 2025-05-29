@@ -25,6 +25,7 @@ import org.wso2.carbon.identity.authorization.framework.model.SearchSubjectsRequ
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -70,8 +71,9 @@ public class LookupSubjectsRequest {
         if (searchSubjectsRequest.getResource().getResourceId() == null) {
             throw new IllegalArgumentException("Invalid request. Resource id must be provided to lookup subjects.");
         }
-        this.subjectType = searchSubjectsRequest.getSubject().getSubjectType();
-        this.permission = searchSubjectsRequest.getAction().getAction();
+        // Convert subject type and permission to lower case since SpiceDB does not allow upper case letters.
+        this.subjectType = searchSubjectsRequest.getSubject().getSubjectType().toLowerCase(Locale.ROOT);
+        this.permission = searchSubjectsRequest.getAction().getAction().toLowerCase(Locale.ROOT);
         this.resource = new Resource(searchSubjectsRequest.getResource().getResourceType(),
                 searchSubjectsRequest.getResource().getResourceId());
     }

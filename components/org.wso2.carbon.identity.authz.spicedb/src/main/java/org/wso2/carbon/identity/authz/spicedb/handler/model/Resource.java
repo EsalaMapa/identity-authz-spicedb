@@ -22,6 +22,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
+import java.util.Locale;
+
 /**
  * The {@code Resource} class represents the resource object that is used in request bodies.
  */
@@ -36,7 +38,8 @@ public class Resource {
 
     public Resource(String resourceType, String resourceId) {
 
-        this.resourceType = resourceType;
+        // Convert resource type to lowercase since SpiceDB expects resource types to be in lowercase.
+        this.resourceType = resourceType.toLowerCase(Locale.ROOT);
         this.resourceId = resourceId;
     }
 

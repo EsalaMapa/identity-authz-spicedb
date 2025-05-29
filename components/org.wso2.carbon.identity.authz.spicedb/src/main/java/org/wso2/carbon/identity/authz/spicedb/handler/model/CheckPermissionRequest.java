@@ -25,6 +25,7 @@ import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationRe
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * The {@code CheckPermissionRequest} class represents the request body of a permission check request sent to SpiceDB.
@@ -64,7 +65,8 @@ public class CheckPermissionRequest {
         }
         this.resource = new Resource(accessEvaluationRequest.getResource().getResourceType(),
                 accessEvaluationRequest.getResource().getResourceId());
-        this.permission = accessEvaluationRequest.getActionObject().getAction();
+        // Convert action to lowercase since SpiceDB does not allow uppercase actions.
+        this.permission = accessEvaluationRequest.getActionObject().getAction().toLowerCase(Locale.ROOT);
         this.subject = new Subject(accessEvaluationRequest.getSubject().getSubjectType(),
                 accessEvaluationRequest.getSubject().getSubjectId());
         if (accessEvaluationRequest.getContext() != null) {
