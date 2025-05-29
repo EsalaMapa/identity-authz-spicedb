@@ -28,7 +28,7 @@
 
     <groupId>org.wso2.carbon.identity.authz.spicedb</groupId>
     <artifactId>identity-authz-spicedb</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.1.2</version>
     <packaging>pom</packaging>
 
     <scm>
@@ -36,7 +36,7 @@
         <developerConnection>scm:git:https://github.com/wso2-extensions/identity-authz-spicedb.git
         </developerConnection>
         <connection>scm:git:https://github.com/wso2-extensions/identity-authz-spicedb.git</connection>
-        <tag>HEAD</tag>
+        <tag>v0.1.2</tag>
     </scm>
 
     <modules>
