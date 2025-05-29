@@ -55,12 +55,12 @@ public class CheckPermissionResponse {
 
     public Map<String, Object> getPartialCaveatInfo() {
 
-        return Collections.unmodifiableMap(this.partialCaveatInfo);
+        return this.partialCaveatInfo != null ? Collections.unmodifiableMap(this.partialCaveatInfo) : null;
     }
 
     public Map<String, Object> getDebugTrace() {
 
-        return Collections.unmodifiableMap(this.debugTrace);
+        return this.debugTrace != null ? Collections.unmodifiableMap(this.debugTrace) : null;
     }
 
     /**

@@ -25,6 +25,7 @@ import org.wso2.carbon.identity.authorization.framework.model.BulkAccessEvaluati
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -103,5 +104,24 @@ public class BulkCheckPermissionResponseTest {
         Assert.assertNotNull(bulkAccessEvaluationResponse.getResults().get(0));
         Assert.assertFalse(bulkAccessEvaluationResponse.getResults().get(0).getDecision());
         Assert.assertNotNull(bulkAccessEvaluationResponse.getResults().get(0).getContext());
+    }
+
+    public void testGetResults() throws Exception {
+
+        BulkCheckPermissionResponse response = new BulkCheckPermissionResponse();
+        Field resultsField = BulkCheckPermissionResponse.class.getDeclaredField("results");
+        resultsField.setAccessible(true);
+        resultsField.set(response, new ArrayList<>());
+        Assert.assertNotNull(response.getResults());
+        Assert.assertTrue(response.getResults().isEmpty());
+    }
+
+    public void testGetResultsWithNull() throws Exception {
+
+        BulkCheckPermissionResponse response = new BulkCheckPermissionResponse();
+        Field resultsField = BulkCheckPermissionResponse.class.getDeclaredField("results");
+        resultsField.setAccessible(true);
+        resultsField.set(response, null);
+        Assert.assertNull(response.getResults());
     }
 }

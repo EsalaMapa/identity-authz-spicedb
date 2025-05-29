@@ -96,7 +96,9 @@ public class SpicedbPermissionRequestService implements AccessEvaluationService 
                         responseString, CheckPermissionResponse.class);
                 AccessEvaluationResponse accessEvaluationResponse = new AccessEvaluationResponse(
                         checkPermissionResponse.isAuthorized());
-                accessEvaluationResponse.setContext(checkPermissionResponse.getPartialCaveatInfo());
+                if (checkPermissionResponse.getPartialCaveatInfo() != null) {
+                    accessEvaluationResponse.setContext(checkPermissionResponse.getPartialCaveatInfo());
+                }
                 return accessEvaluationResponse;
             } else if (HttpStatus.SC_BAD_REQUEST <= statusCode &&
                     statusCode <= HttpStatus.SC_INSUFFICIENT_STORAGE) {
