@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.carbon.identity.authz.spicedb</groupId>
         <artifactId>identity-authz-spicedb</artifactId>
-        <version>0.1.2-SNAPSHOT</version>
+        <version>0.1.3-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <packaging>bundle</packaging>
