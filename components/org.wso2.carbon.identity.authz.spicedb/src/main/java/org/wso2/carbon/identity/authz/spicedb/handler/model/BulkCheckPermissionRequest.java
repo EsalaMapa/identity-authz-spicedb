@@ -20,16 +20,24 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationRequest;
+import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbApiConstants;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.ConsistencyUtil;
 
 import java.util.ArrayList;
 
 /**
  * The {@code BulkCheckPermissionRequest} class is a model class for the bulk permission check request body.
  */
+@SuppressFBWarnings(value = "URF_UNREAD_FIELD",
+        justification = "All fields are accessed via Gson serialization/deserialization")
 public class BulkCheckPermissionRequest {
 
+    @SerializedName(SpiceDbModelConstants.CONSISTENCY)
+    @Expose
+    private Consistency consistency;
     @SerializedName(SpiceDbModelConstants.BULK_CHECK_REQUESTS)
     @Expose
     private ArrayList<CheckPermissionRequest> items;
@@ -39,6 +47,7 @@ public class BulkCheckPermissionRequest {
         if (items == null || items.isEmpty()) {
             throw new IllegalArgumentException("Invalid request. The list of requests cannot be null or empty.");
         }
+        this.consistency = ConsistencyUtil.setConsistency(SpiceDbApiConstants.ENABLE_CONSISTENCY);
         this.items = new ArrayList<>();
         for (AccessEvaluationRequest item : items) {
             this.items.add(new CheckPermissionRequest(item));

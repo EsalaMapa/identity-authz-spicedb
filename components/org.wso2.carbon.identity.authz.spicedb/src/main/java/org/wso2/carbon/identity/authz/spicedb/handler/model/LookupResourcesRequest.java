@@ -22,7 +22,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.wso2.carbon.identity.authorization.framework.model.SearchResourcesRequest;
+import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbApiConstants;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.ConsistencyUtil;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,6 +38,9 @@ import java.util.Map;
         justification = "All fields are accessed via Gson serialization")
 public class LookupResourcesRequest {
 
+    @SerializedName(SpiceDbModelConstants.CONSISTENCY)
+    @Expose
+    private Consistency consistency;
     @SerializedName(SpiceDbModelConstants.RESOURCE_OBJECT_TYPE)
     @Expose
     private String resourceType;
@@ -66,6 +71,7 @@ public class LookupResourcesRequest {
         if (searchResourcesRequest.getSubject().getSubjectId() == null) {
             throw new IllegalArgumentException("Invalid request. Subject id must be provided to lookup resources.");
         }
+        this.consistency = ConsistencyUtil.setConsistency(SpiceDbApiConstants.ENABLE_CONSISTENCY);
         // Convert resource type and action to lower case since SpiceDB does not allow upper case letters.
         this.resourceType = searchResourcesRequest.getResource().getResourceType().toLowerCase(Locale.ROOT);
         this.permission = searchResourcesRequest.getAction().getAction().toLowerCase(Locale.ROOT);

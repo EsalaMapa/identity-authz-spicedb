@@ -34,6 +34,9 @@ public class SpiceDbApiConstants {
     public static final String CONTENT_TYPE = "application/json";
     public static final String PRE_SHARED_KEY = IdentityUtil.getProperty("FGAEngineConfig.Authentication.PreSharedKey");
 
+    //consistent mode.
+    public static final boolean ENABLE_CONSISTENCY = true;
+
     //Api endpoints.
     public static final String PERMISSION_CHECK = "v1/permissions/check";
     public static final String PERMISSIONS_BULKCHECK = "v1/permissions/checkbulk";
@@ -42,4 +45,5 @@ public class SpiceDbApiConstants {
     public static final String RELATIONSHIPS_READ = "v1/relationships/read";
      //Experimental api endpoints.
     public static final String REFLECT_SCHEMA = "v1/experimental/reflectschema";
+
 }

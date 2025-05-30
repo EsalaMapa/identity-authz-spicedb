@@ -22,7 +22,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.wso2.carbon.identity.authorization.framework.model.AccessEvaluationRequest;
+import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbApiConstants;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.ConsistencyUtil;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -34,6 +36,9 @@ import java.util.Locale;
         justification = "All fields are accessed via Gson serialization/deserialization")
 public class CheckPermissionRequest {
 
+    @SerializedName(SpiceDbModelConstants.CONSISTENCY)
+    @Expose
+    private Consistency consistency;
     @SerializedName(SpiceDbModelConstants.RESOURCE)
     @Expose
     private Resource resource;
@@ -63,6 +68,7 @@ public class CheckPermissionRequest {
             throw new IllegalArgumentException("Invalid request. Resource Id and subject Id " +
                     "must be provided for permission check.");
         }
+        this.consistency = ConsistencyUtil.setConsistency(SpiceDbApiConstants.ENABLE_CONSISTENCY);
         this.resource = new Resource(accessEvaluationRequest.getResource().getResourceType(),
                 accessEvaluationRequest.getResource().getResourceId());
         // Convert action to lowercase since SpiceDB does not allow uppercase actions.

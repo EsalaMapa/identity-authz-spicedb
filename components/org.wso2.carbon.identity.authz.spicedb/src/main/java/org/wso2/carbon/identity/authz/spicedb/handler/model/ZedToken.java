@@ -32,6 +32,11 @@ public class ZedToken {
     @Expose
     private String token;
 
+    public ZedToken(String exactSnapshot) {
+
+        this.token = exactSnapshot;
+    }
+
     public String getToken() {
 
         return token;

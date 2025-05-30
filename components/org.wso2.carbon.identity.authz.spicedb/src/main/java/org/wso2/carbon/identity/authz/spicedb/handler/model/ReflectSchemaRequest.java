@@ -21,7 +21,9 @@ package org.wso2.carbon.identity.authz.spicedb.handler.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbApiConstants;
 import org.wso2.carbon.identity.authz.spicedb.constants.SpiceDbModelConstants;
+import org.wso2.carbon.identity.authz.spicedb.handler.util.ConsistencyUtil;
 
 import java.util.ArrayList;
 
@@ -33,6 +35,9 @@ import java.util.ArrayList;
         justification = "All fields are accessed via Gson serialization")
 public class ReflectSchemaRequest {
 
+    @SerializedName(SpiceDbModelConstants.CONSISTENCY)
+    @Expose
+    private Consistency consistency;
     @SerializedName(SpiceDbModelConstants.OPTIONAL_FILTERS)
     @Expose
     private ArrayList<OptionalSchemaFilter> schemaFilters;
@@ -40,6 +45,7 @@ public class ReflectSchemaRequest {
     public ReflectSchemaRequest(ArrayList<OptionalSchemaFilter> schemaFilters) {
 
         this.schemaFilters = schemaFilters != null ? new ArrayList<>(schemaFilters) : null;
+        this.consistency = ConsistencyUtil.setConsistency(SpiceDbApiConstants.ENABLE_CONSISTENCY);
     }
 
 }

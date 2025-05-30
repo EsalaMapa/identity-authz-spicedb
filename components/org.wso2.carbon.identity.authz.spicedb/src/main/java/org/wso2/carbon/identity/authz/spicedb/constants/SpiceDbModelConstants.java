@@ -94,4 +94,12 @@ public class SpiceDbModelConstants {
     public static final String PERMISSION_COMMENT = "comment";
     public static final String PARENT_DEFINITION = "parentDefinitionName";
     public static final String SUBJECT_TYPES = "subjectTypes";
+
+    // Consistency Values
+    public static final String FULLY_CONSISTENT = "fullyConsistent";
+    public static final String MINIMIZE_LATENCY = "minimizeLatency";
+    public static final String AT_EXACT_SNAPSHOT = "atExactSnapshot";
+    public static final boolean FULLY_CONSISTENT_VALUE = true;
+    public static final String SNAPSHOT_VALUE = null;
+    public static final String CONSISTENCY = "consistency";
 }
